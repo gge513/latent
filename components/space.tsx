@@ -3,7 +3,9 @@
 import Link from "next/link";
 import { useEffect, useRef } from "react";
 
-import { lineFor, type SpaceBuilder } from "@/lib/builders";
+// Client-safe module only. Importing lib/builders here would pull the database
+// client into the browser bundle, which is what crashed this page once already.
+import { lineFor, type SpaceBuilder } from "@/lib/builder-card";
 
 /**
  * The space: the whole cohort, positioned by similarity, developing under
@@ -45,16 +47,33 @@ export function Space({ builders }: { builders: SpaceBuilder[] }) {
     // never runs, so a reduced-motion visitor pays nothing for the mechanic.
     if (reduced.matches) return;
 
-    let centres: { x: number; y: number }[] = [];
+    // Cached geometry. Measured on scroll and resize, never inside the loop,
+    // so a pointer move never forces a reflow.
+    let boxes: {
+      x: number;
+      y: number;
+      left: number;
+      right: number;
+      top: number;
+      bottom: number;
+    }[] = [];
     let needsMeasure = true;
     let pointer: { x: number; y: number } | null = null;
+    let keyboard: Element | null = null;
     let raf = 0;
     let settleFrames = 0;
 
     function measure() {
-      centres = els().map((el) => {
+      boxes = els().map((el) => {
         const r = el.getBoundingClientRect();
-        return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+        return {
+          x: r.left + r.width / 2,
+          y: r.top + r.height / 2,
+          left: r.left,
+          right: r.right,
+          top: r.top,
+          bottom: r.bottom,
+        };
       });
       needsMeasure = false;
     }
@@ -77,14 +96,72 @@ export function Space({ builders }: { builders: SpaceBuilder[] }) {
       if (needsMeasure) measure();
       const list = els();
       let changed = false;
+
+      // Two channels, because they answer different questions.
+      //   --dev   : how close attention is. Every frame gets a value, which is
+      //             what makes the space breathe as you move across it.
+      //   --focus : whether this is THE frame being looked at. Only one can
+      //             hold it, because a developed frame is five lines tall and
+      //             two of them at once is just collided text.
+      let best = -1;
+      let bestDev = 0;
       for (let i = 0; i < list.length; i++) {
-        const centre = centres[i];
+        if (!boxes[i]) continue;
+        const d = devFor(boxes[i]);
+        if (d > bestDev) {
+          bestDev = d;
+          best = i;
+        }
+      }
+
+      // A frame the pointer is actually inside always wins, whatever the
+      // centre distances say. CSS :hover is the no-JS fallback for the same
+      // thing, and when the two disagree you get two frames both convinced
+      // they are the one being read, writing their lines over each other.
+      // Uses cached geometry, so agreeing costs nothing per frame.
+      if (pointer && hover.matches) {
+        const p = pointer;
+        const under = boxes.findIndex(
+          (b) => p.x >= b.left && p.x <= b.right && p.y >= b.top && p.y <= b.bottom
+        );
+        if (under !== -1) best = under;
+      }
+
+      // Keyboard focus outranks everything, and it has to be handled here
+      // rather than in CSS: this loop writes --focus inline on every frame, and
+      // an inline value beats any stylesheet rule, so a :focus-visible rule
+      // would silently never win and a keyboard user would never see a line.
+      if (keyboard) {
+        const k = list.indexOf(keyboard as HTMLAnchorElement);
+        if (k !== -1) best = k;
+      }
+
+      for (let i = 0; i < list.length; i++) {
+        const centre = boxes[i];
         if (!centre) continue;
-        const next = devFor(centre);
+        // Safety net for the keyboard path: if a frame is keyboard-focused,
+        // drop our inline value entirely so the :focus-visible rule in the
+        // stylesheet can apply. Inline always beats the stylesheet, so writing
+        // a 0 here is the difference between a reachable space and one a
+        // keyboard user can tab through but never read.
+        if (list[i].matches(":focus-visible")) {
+          list[i].style.removeProperty("--focus");
+          list[i].style.setProperty("--dev", "1");
+          list[i].dataset.dev = "1";
+          list[i].dataset.focus = "1";
+          continue;
+        }
+
+        const isKeyboard = keyboard !== null && list[i] === keyboard;
+        const next = isKeyboard ? 1 : devFor(centre);
+        const focus = i === best && (isKeyboard || next > 0.6) ? 1 : 0;
         const prev = Number(list[i].dataset.dev ?? "0");
-        if (Math.abs(next - prev) > 0.004) {
+        const prevFocus = Number(list[i].dataset.focus ?? "0");
+        if (Math.abs(next - prev) > 0.004 || focus !== prevFocus) {
           list[i].dataset.dev = String(next);
+          list[i].dataset.focus = String(focus);
           list[i].style.setProperty("--dev", next.toFixed(3));
+          list[i].style.setProperty("--focus", String(focus));
           changed = true;
         }
       }
@@ -119,11 +196,26 @@ export function Space({ builders }: { builders: SpaceBuilder[] }) {
       needsMeasure = true;
       wake();
     }
+    function onFocusIn(e: FocusEvent) {
+      const el = (e.target as Element | null)?.closest(".frame") ?? null;
+      // Only a frame reached by keyboard claims focus; a click already has the
+      // pointer path, and letting it claim here would strand the line behind
+      // after the pointer moves on.
+      keyboard = el && el.matches(":focus-visible") ? el : null;
+      needsMeasure = true;
+      wake();
+    }
+    function onFocusOut() {
+      keyboard = null;
+      wake();
+    }
 
     window.addEventListener("pointermove", onPointerMove, { passive: true });
     document.addEventListener("pointerleave", onPointerLeave);
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onResize);
+    document.addEventListener("focusin", onFocusIn);
+    document.addEventListener("focusout", onFocusOut);
     wake();
 
     return () => {
@@ -132,6 +224,8 @@ export function Space({ builders }: { builders: SpaceBuilder[] }) {
       document.removeEventListener("pointerleave", onPointerLeave);
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onResize);
+      document.removeEventListener("focusin", onFocusIn);
+      document.removeEventListener("focusout", onFocusOut);
     };
   }, [builders.length]);
 

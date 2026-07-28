@@ -1,5 +1,8 @@
+import "server-only";
+
 import { asc, eq } from "drizzle-orm";
 
+import type { SpaceBuilder } from "@/lib/builder-card";
 import { db } from "@/lib/db";
 import { builders, vouches } from "@/lib/db/schema";
 import type { GithubFacts } from "@/lib/github";
@@ -10,20 +13,15 @@ import type { GithubFacts } from "@/lib/github";
  *
  * Everything here is public-by-construction: opted-out builders are filtered
  * at the source so no code path downstream can accidentally render one.
+ *
+ * "server-only" is load-bearing. This module reaches the database, and the
+ * database client throws at import time when DATABASE_URL is absent — which is
+ * always true in a browser. A client component that imports this file used to
+ * fail at hydration and take the tab down with it; now it fails the build
+ * instead, where a mistake is cheap.
  */
 
-export type SpaceBuilder = {
-  handle: string;
-  displayName: string | null;
-  /** Their words, written at claim. Null until claimed. */
-  developedLine: string | null;
-  /** Machine-derived from public facts. Always shown as such. */
-  latentLine: string | null;
-  claimed: boolean;
-  x: number;
-  y: number;
-  languages: string[];
-};
+export type { SpaceBuilder } from "@/lib/builder-card";
 
 export type BuilderProfile = SpaceBuilder & {
   github: GithubFacts | null;
@@ -90,15 +88,4 @@ export async function getHandles(): Promise<string[]> {
     .from(builders)
     .orderBy(asc(builders.handle));
   return rows.filter((r) => !r.optedOut).map((r) => r.handle);
-}
-
-/**
- * The one line a card carries. Claimed builders speak for themselves; latent
- * ones get the machine-derived line, and the caller is responsible for
- * marking it as machine-derived on screen.
- */
-export function lineFor(b: SpaceBuilder): { text: string; theirs: boolean } | null {
-  if (b.developedLine) return { text: b.developedLine, theirs: true };
-  if (b.latentLine) return { text: b.latentLine, theirs: false };
-  return null;
 }

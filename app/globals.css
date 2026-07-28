@@ -10,6 +10,9 @@
  */
 :root {
   --base: #181310;
+  /* Same colour, as channels, so a frame can fade its own darkness in
+     underneath itself without a second colour entering the palette. */
+  --base-rgb: 24 19 16;
   --ink: #ede5d8;
   --safelight: #df6432;
 
@@ -44,14 +47,25 @@ body {
  */
 .frame {
   --dev: 0;
+  --focus: 0;
   opacity: calc(var(--latent) + (1 - var(--latent)) * var(--dev));
   filter: blur(calc((1 - var(--dev)) * 2px));
+  /* The frame being read sits above its neighbours, and brings its own patch
+     of darkness with it. Without the second half, a developed line is written
+     straight across the handles behind it and neither one can be read. The
+     colour is the page's own, so this occludes without becoming a box. */
+  z-index: calc(var(--focus) * 10);
+  padding: 0.4rem 0.6rem;
+  margin: -0.4rem -0.6rem;
+  background: rgb(var(--base-rgb) / var(--focus));
+  transition: background 200ms ease-out;
 }
 
 /* Keyboard users develop a frame by reaching it. Without this the space is
    unreadable without a pointer, which is a failure, not a nicety. */
 .frame:focus-visible {
   --dev: 1;
+  --focus: 1;
   filter: none;
   outline: 2px solid var(--safelight);
   outline-offset: 8px;
@@ -59,24 +73,32 @@ body {
 
 .frame:hover {
   --dev: 1;
+  --focus: 1;
   filter: none;
 }
 
-/* The line itself is the thing that develops: a frame at rest is a name in
-   the dark, and the words arrive with attention. */
+/* The line arrives only for the frame actually being read. Everything else
+   brightens and stays a name in the dark, which is what keeps thirty
+   developed cards from writing over each other. */
 .frame-line {
-  opacity: var(--dev);
+  opacity: var(--focus);
   transition: opacity 220ms ease-out;
 }
 
-/* Motion option A, the locked floor: everything renders developed and still. */
+/*
+ * Motion option A, the locked floor: every frame renders developed and still,
+ * and the rAF loop never starts.
+ *
+ * The lines stay tied to focus even here. Not for motion's sake — thirty lines
+ * on screen at once would write over each other and the space would be
+ * unreadable. Still, but reachable: hover or tab to read one, with no fade.
+ */
 @media (prefers-reduced-motion: reduce) {
   .frame {
     --dev: 1;
     filter: none;
   }
   .frame-line {
-    opacity: 1;
     transition: none;
   }
 }
