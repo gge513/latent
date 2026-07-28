@@ -40,7 +40,7 @@ export function SentenceFrame({
         onKeyDown={keyDown}
         disabled={disabled}
         aria-label="Who you are"
-        size={Math.max(8, blank1.length)}
+        size={Math.min(24, Math.max(8, blank1.length))}
         className={`${inputClass} ${blank1 ? "opacity-100" : "opacity-[var(--latent)] focus:opacity-100"}`}
       />{" "}
       looking for{" "}
@@ -50,7 +50,7 @@ export function SentenceFrame({
         onKeyDown={keyDown}
         disabled={disabled}
         aria-label="Who you are looking for"
-        size={Math.max(8, blank2.length)}
+        size={Math.min(28, Math.max(8, blank2.length))}
         className={`${inputClass} ${blank2 ? "opacity-100" : "opacity-[var(--latent)] focus:opacity-100"}`}
       />
     </h1>
