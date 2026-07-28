@@ -115,7 +115,9 @@ Hard rules:
 - No rankings, no scores, no comparisons between the picked builders.
 - Never disparage anyone, including builders you do not pick.
 - Plain language a non-engineer reads without translation. No unexplained technical nouns.
-- Suggestions, never verdicts. Dry, warm, adult tone. No exclamation marks, no emoji.`;
+- Suggestions, never verdicts. Dry, warm, adult tone. No exclamation marks, no emoji.
+
+Output format, exactly: for each chosen builder, one line containing only their @handle, then the explanation on the following line(s), then one blank line. No preamble, no closing remarks, no other text.`;
 
 export function matchPrompt(query: string, candidates: BuilderForMatching[]): string {
   const list = candidates.map((b) => ({
