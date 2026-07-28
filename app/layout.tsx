@@ -27,7 +27,16 @@ const plexMono = localFont({
   variable: "--font-plex-mono",
 });
 
+/**
+ * metadataBase is what turns relative og:image paths into the absolute URLs
+ * Slack and LinkedIn require. Without it every share card resolves against
+ * localhost and silently fails to unfurl.
+ */
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://latent-nu.vercel.app";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: "Latent",
   description: "A cohort of builders, developing.",
 };

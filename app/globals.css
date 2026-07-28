@@ -30,3 +30,53 @@ body {
   color: var(--ink);
   font-family: var(--font-newsreader), Georgia, serif;
 }
+
+/*
+ * The develop mechanic.
+ *
+ * One rAF loop writes --dev (0..1) on each frame element as attention moves.
+ * CSS turns that number into opacity and blur, and nothing else. Both are
+ * compositable, so a pointer moving across thirty frames never causes a React
+ * render, a style recalculation on the tree, or a layout pass.
+ *
+ * Attention has three sources and they are peers, not fallbacks:
+ *   pointer (desktop) · scroll position (touch) · focus (keyboard)
+ */
+.frame {
+  --dev: 0;
+  opacity: calc(var(--latent) + (1 - var(--latent)) * var(--dev));
+  filter: blur(calc((1 - var(--dev)) * 2px));
+}
+
+/* Keyboard users develop a frame by reaching it. Without this the space is
+   unreadable without a pointer, which is a failure, not a nicety. */
+.frame:focus-visible {
+  --dev: 1;
+  filter: none;
+  outline: 2px solid var(--safelight);
+  outline-offset: 8px;
+}
+
+.frame:hover {
+  --dev: 1;
+  filter: none;
+}
+
+/* The line itself is the thing that develops: a frame at rest is a name in
+   the dark, and the words arrive with attention. */
+.frame-line {
+  opacity: var(--dev);
+  transition: opacity 220ms ease-out;
+}
+
+/* Motion option A, the locked floor: everything renders developed and still. */
+@media (prefers-reduced-motion: reduce) {
+  .frame {
+    --dev: 1;
+    filter: none;
+  }
+  .frame-line {
+    opacity: 1;
+    transition: none;
+  }
+}
