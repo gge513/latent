@@ -26,8 +26,10 @@ export function SentenceFrame({
     }
   }
 
+  // The blank is the input's own bottom border — no placeholder text, so the
+  // line never doubles. Latent when empty, developed when filled or focused.
   const inputClass =
-    "inline-block border-0 border-b bg-transparent text-center font-[inherit] text-[inherit] italic outline-none transition-opacity duration-500 border-b-[color-mix(in_srgb,var(--ink)_40%,transparent)] focus-visible:border-b-[var(--safelight)] placeholder:not-italic placeholder:opacity-40";
+    "inline-block border-0 border-b bg-transparent text-center font-[inherit] text-[inherit] italic outline-none transition-opacity duration-500 border-b-[color-mix(in_srgb,var(--ink)_40%,transparent)] focus-visible:border-b-[var(--safelight)]";
 
   return (
     <h1 className="max-w-3xl text-center text-4xl leading-relaxed sm:text-5xl sm:leading-relaxed">
@@ -37,7 +39,6 @@ export function SentenceFrame({
         onChange={(e) => onChange(e.target.value, blank2)}
         onKeyDown={keyDown}
         disabled={disabled}
-        placeholder="________"
         aria-label="Who you are"
         size={Math.max(8, blank1.length)}
         className={`${inputClass} ${blank1 ? "opacity-100" : "opacity-[var(--latent)] focus:opacity-100"}`}
@@ -48,7 +49,6 @@ export function SentenceFrame({
         onChange={(e) => onChange(blank1, e.target.value)}
         onKeyDown={keyDown}
         disabled={disabled}
-        placeholder="________"
         aria-label="Who you are looking for"
         size={Math.max(8, blank2.length)}
         className={`${inputClass} ${blank2 ? "opacity-100" : "opacity-[var(--latent)] focus:opacity-100"}`}
