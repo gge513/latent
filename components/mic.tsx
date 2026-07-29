@@ -1,6 +1,15 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useSyncExternalStore } from "react";
+
+// Whether this browser can hear at all. It is a fact about the environment,
+// not React state, and it never changes after load — so it is read through a
+// store with a server snapshot of `false`. The server renders no mic, the
+// client renders one only where the API exists, and the two agree.
+const NEVER_CHANGES = () => () => {};
+const hasSpeech = () =>
+  !!(window.SpeechRecognition ?? window.webkitSpeechRecognition);
+const noSpeechOnServer = () => false;
 
 /**
  * Web Speech capture. Renders nothing when the browser has no Speech API —
@@ -20,17 +29,16 @@ export function Mic({
   onListeningChange: (listening: boolean) => void;
   disabled?: boolean;
 }) {
-  const [supported, setSupported] = useState(false);
+  const supported = useSyncExternalStore(
+    NEVER_CHANGES,
+    hasSpeech,
+    noSpeechOnServer
+  );
   const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
   const finalRef = useRef("");
 
-  useEffect(() => {
-    setSupported(
-      typeof window !== "undefined" &&
-        !!(window.SpeechRecognition ?? window.webkitSpeechRecognition)
-    );
-    return () => recognitionRef.current?.abort();
-  }, []);
+  // Never leave a live microphone open behind an unmounted button.
+  useEffect(() => () => recognitionRef.current?.abort(), []);
 
   if (!supported) return null;
 

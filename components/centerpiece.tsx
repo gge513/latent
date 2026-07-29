@@ -4,6 +4,13 @@ import { useRef, useState } from "react";
 
 import { Mic } from "@/components/mic";
 import { SentenceFrame } from "@/components/sentence-frame";
+import {
+  composeSentence,
+  DEFAULT_MODE,
+  detectMode,
+  parseSentence,
+  type FrameMode,
+} from "@/lib/frame-mode";
 
 /**
  * The centerpiece: speak (or type) the blank sentence, and two or three
@@ -15,19 +22,15 @@ import { SentenceFrame } from "@/components/sentence-frame";
 type Section = { handle: string; text: string };
 type Meta = { handle: string; name: string | null; line: string | null };
 
+// The second blank holds THE WORK, never a person. This is George's own
+// production test from Monday, which is what exposed the old frame: he typed
+// "someone who can build" to convert the person-blank into a work-blank by
+// hand, mid-sentence.
 const EXAMPLE = {
-  blank1: "founder",
-  blank2: "someone who ships web apps fast",
+  blank1: "nonprofit director",
+  blank2: "a patient community app with AI",
+  mode: "build" as FrameMode,
 };
-
-function parseTranscript(text: string): { blank1: string; blank2: string } {
-  const cleaned = text.replace(/^\s*(i\s*am|i'm)\s+(a|an)?\s*/i, "");
-  const split = cleaned.split(/looking\s+for\s+/i);
-  if (split.length >= 2) {
-    return { blank1: split[0].trim(), blank2: split.slice(1).join(" ").trim() };
-  }
-  return { blank1: cleaned.trim(), blank2: "" };
-}
 
 function parseSections(body: string, known: Set<string>): Section[] {
   const sections: Section[] = [];
@@ -73,6 +76,7 @@ function playFixTone() {
 export function Centerpiece() {
   const [blank1, setBlank1] = useState("");
   const [blank2, setBlank2] = useState("");
+  const [mode, setMode] = useState<FrameMode>(DEFAULT_MODE);
   const [listening, setListening] = useState(false);
   const [phase, setPhase] = useState<"idle" | "matching" | "done">("idle");
   const [sections, setSections] = useState<Section[]>([]);
@@ -81,6 +85,19 @@ export function Centerpiece() {
   const [failed, setFailed] = useState(false);
   const spokeRef = useRef(false);
   const runningRef = useRef(false);
+
+  /**
+   * The first blank owns the connective, so every write to it goes through
+   * here. `detectMode` returning null means the visitor is mid-word over a
+   * term, and the last decision stands rather than the sentence flickering
+   * under their fingers.
+   */
+  function setWhoTheyAre(value: string) {
+    setBlank1(value);
+    if (!value.trim()) return setMode(DEFAULT_MODE);
+    const detected = detectMode(value);
+    if (detected) setMode(detected);
+  }
 
   async function runMatch(query: string, viaVoice: boolean) {
     if (runningRef.current || !query.trim()) return;
@@ -132,9 +149,12 @@ export function Centerpiece() {
   }
 
   function handleTranscript(text: string, isFinal: boolean) {
-    const parsed = parseTranscript(text);
-    setBlank1(parsed.blank1);
+    // Speech arrives as one sentence, so the connective it actually contains
+    // wins over the keyword test — the visitor said it out loud.
+    const parsed = parseSentence(text);
+    setWhoTheyAre(parsed.blank1);
     setBlank2(parsed.blank2);
+    if (parsed.mode) setMode(parsed.mode);
     if (isFinal) {
       spokeRef.current = true;
       void runMatch(text, true);
@@ -143,15 +163,16 @@ export function Centerpiece() {
 
   function submitTyped() {
     spokeRef.current = false;
-    void runMatch(`I am a ${blank1.trim()} looking for ${blank2.trim()}`, false);
+    void runMatch(composeSentence(blank1, blank2, mode), false);
   }
 
   function seeItRun() {
     spokeRef.current = false;
-    setBlank1(EXAMPLE.blank1);
+    setWhoTheyAre(EXAMPLE.blank1);
     setBlank2(EXAMPLE.blank2);
+    setMode(EXAMPLE.mode);
     void runMatch(
-      `I am a ${EXAMPLE.blank1} looking for ${EXAMPLE.blank2}`,
+      composeSentence(EXAMPLE.blank1, EXAMPLE.blank2, EXAMPLE.mode),
       false
     );
   }
@@ -163,8 +184,9 @@ export function Centerpiece() {
       <SentenceFrame
         blank1={blank1}
         blank2={blank2}
+        mode={mode}
         onChange={(a, b) => {
-          setBlank1(a);
+          setWhoTheyAre(a);
           setBlank2(b);
         }}
         onSubmit={submitTyped}

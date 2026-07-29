@@ -1,20 +1,28 @@
 "use client";
 
+import { CONNECTIVE, type FrameMode } from "@/lib/frame-mode";
+
 /**
- * The single question on the page: I am a ___ looking for a ___
+ * The single question on the page: I am a ___ [connective] ___
  * The frame tells a partner what to say to the microphone; the blanks are
  * latent until filled, by voice or by typing. The typed inputs ARE the
  * blanks — a peer of the spoken path, equally prominent.
+ *
+ * The connective is the third blank, and the site owns it (J7). It is not an
+ * input: it changes itself in response to the first blank, which is the whole
+ * point. It crossfades rather than cutting, and it never touches blank 2.
  */
 export function SentenceFrame({
   blank1,
   blank2,
+  mode,
   onChange,
   onSubmit,
   disabled,
 }: {
   blank1: string;
   blank2: string;
+  mode: FrameMode;
   onChange: (blank1: string, blank2: string) => void;
   onSubmit: () => void;
   disabled?: boolean;
@@ -43,13 +51,17 @@ export function SentenceFrame({
         size={Math.min(24, Math.max(8, blank1.length))}
         className={`${inputClass} ${blank1 ? "opacity-100" : "opacity-[var(--latent)] focus:opacity-100"}`}
       />{" "}
-      looking for{" "}
+      {/* Keyed on the mode, so React replaces the node and the new words
+          develop in. No state, no timer: the animation is the swap. */}
+      <span key={mode} aria-live="polite" className="connective">
+        {CONNECTIVE[mode]}
+      </span>{" "}
       <input
         value={blank2}
         onChange={(e) => onChange(blank1, e.target.value)}
         onKeyDown={keyDown}
         disabled={disabled}
-        aria-label="Who you are looking for"
+        aria-label="What you want built"
         size={Math.min(28, Math.max(8, blank2.length))}
         className={`${inputClass} ${blank2 ? "opacity-100" : "opacity-[var(--latent)] focus:opacity-100"}`}
       />
