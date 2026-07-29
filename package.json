@@ -11,7 +11,9 @@
     "db:push": "drizzle-kit push",
     "db:roster": "tsx --env-file=.env scripts/seed-roster.ts",
     "db:lines": "tsx --env-file=.env scripts/generate-lines.ts",
-    "db:layout": "tsx --env-file=.env scripts/layout.ts"
+    "db:layout": "tsx --env-file=.env scripts/layout.ts",
+    "db:vouches": "tsx --env-file=.env scripts/seed-vouches.ts",
+    "test": "tsx --env-file=.env scripts/integration-smoke.mts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.115.0",

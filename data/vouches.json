@@ -1,0 +1,20 @@
+{
+  "_README": [
+    "Human-written observed lines, seeded by scripts/seed-vouches.ts (npm run db:vouches).",
+    "",
+    "RULES, from BUILD-PLAN.md section 8:",
+    "  - Observations, NEVER endorsements. 'Found a race condition in someone",
+    "    else's diff', not 'great engineer'.",
+    "  - No scores, no ratings, no rank. Lock 4.",
+    "  - These are George's words and need his sign-off before they ship.",
+    "  - One line per handle. Attributed on the card as 'observed by @gge513'.",
+    "",
+    "Candidate lines mined from his Week 2 dossiers, with the evidence behind",
+    "each one, are in week3-vibe/VOUCH-WORKSHEET.md. Nothing moves from that",
+    "worksheet into this file without his ratification.",
+    "",
+    "Add entries under 'lines' as \"handle\": \"the observed line.\""
+  ],
+  "observer": "gge513",
+  "lines": {}
+}
