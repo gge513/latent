@@ -238,7 +238,7 @@ export function Space({ builders }: { builders: SpaceBuilder[] }) {
         >
           the whole cohort
         </h2>
-        <p className="mt-3 font-mono text-xs leading-relaxed opacity-40">
+        <p className="mt-3 font-mono text-xs leading-relaxed opacity-55">
           Builders who work on similar things sit near each other. Nothing here
           is ranked. Move across them, or open one.
         </p>
@@ -258,8 +258,13 @@ export function Space({ builders }: { builders: SpaceBuilder[] }) {
               ref={(el) => {
                 frames.current[i] = el;
               }}
-              className="frame absolute block w-44 -translate-x-1/2 -translate-y-1/2 sm:w-52"
-              style={{ left: `${b.x * 100}%`, top: `${b.y * 100}%` }}
+              className="frame space-frame absolute block w-44 -translate-x-1/2 -translate-y-1/2 sm:w-52"
+              style={
+                {
+                  "--x": `${b.x * 100}%`,
+                  "--y": `${b.y * 100}%`,
+                } as React.CSSProperties
+              }
             >
               <span className="block font-mono text-xs tracking-widest">
                 @{b.handle}
@@ -277,7 +282,7 @@ export function Space({ builders }: { builders: SpaceBuilder[] }) {
         })}
       </div>
 
-      <p className="mx-auto max-w-2xl px-6 text-center font-mono text-xs leading-relaxed opacity-40">
+      <p className="mx-auto max-w-2xl px-6 text-center font-mono text-xs leading-relaxed opacity-55">
         Dim lines are read from each builder&rsquo;s public GitHub. A builder
         who claims their card replaces that line with their own words.
       </p>

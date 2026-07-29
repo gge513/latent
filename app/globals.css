@@ -105,6 +105,32 @@ body {
   }
 }
 
+/* The /proof line arrives the way everything else does: it develops. Slower
+   than the connective because nothing is waiting on it. */
+.develop-once {
+  animation: develop-in 900ms ease-out;
+}
+
+/*
+ * Where each frame sits in the space. The layout script writes positions in
+ * 0..1 and the edges of that range are real: at x = 0.07 on a phone, half a
+ * 11rem card hangs off the screen. The clamp keeps every frame's centre far
+ * enough in that the card stays fully on-canvas, at every width, without the
+ * layout script needing to know about screens.
+ */
+.space-frame {
+  /* half the card width: w-44 below sm, w-52 from sm up */
+  --half: 5.5rem;
+  left: clamp(var(--half), var(--x), calc(100% - var(--half)));
+  top: var(--y);
+}
+
+@media (min-width: 640px) {
+  .space-frame {
+    --half: 6.5rem;
+  }
+}
+
 /*
  * Motion option A, the locked floor: every frame renders developed and still,
  * and the rAF loop never starts.
@@ -123,5 +149,46 @@ body {
   }
   .connective {
     animation: none;
+  }
+  .develop-once {
+    animation: none;
+  }
+}
+
+/*
+ * Contrast, measured rather than assumed (scripted WCAG math, 2026-07-29):
+ *
+ *   ink on base                 14.74 : 1   AA/AAA
+ *   safelight on base            5.27 : 1   AA
+ *   ink at 0.55 over base        5.16 : 1   AA — the floor for informational
+ *                                           copy; 0.50 computes to 4.47 and
+ *                                           fails by a hair, which is why no
+ *                                           informational text sits below 55.
+ *   ink at --latent (0.28)       2.24 : 1   below AA, and deliberate: latent
+ *                                           is the aesthetic. Every latent
+ *                                           frame has a full-contrast reading
+ *                                           path in every input mode (hover,
+ *                                           Tab, scroll-centre), and the two
+ *                                           rules below raise the resting
+ *                                           floor for anyone who asks for it.
+ */
+@media (prefers-contrast: more) {
+  :root {
+    /* ink at 0.7 over base measures 7.65:1 */
+    --latent: 0.7;
+  }
+  .frame {
+    filter: none;
+  }
+}
+
+/* Forced-colors mode replaces the palette entirely; opacity is the one thing
+   that would still dim text there, so it is the one thing turned off. The
+   focus-only line keeps thirty absolutely-positioned lines from writing over
+   each other, exactly as in the default mode. */
+@media (forced-colors: active) {
+  .frame {
+    opacity: 1;
+    filter: none;
   }
 }

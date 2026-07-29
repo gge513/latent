@@ -1,10 +1,10 @@
 import "server-only";
 
-import { asc, eq } from "drizzle-orm";
+import { and, asc, count, eq, isNotNull } from "drizzle-orm";
 
 import type { SpaceBuilder } from "@/lib/builder-card";
 import { db } from "@/lib/db";
-import { builders, vouches } from "@/lib/db/schema";
+import { builders, events, vouches } from "@/lib/db/schema";
 import type { GithubFacts } from "@/lib/github";
 
 /**
@@ -78,6 +78,35 @@ export async function getBuilder(handle: string): Promise<BuilderProfile | null>
     languages: languagesOf(row.github),
     github: row.github as GithubFacts | null,
     vouches: vouchRows.map((v) => ({ from: v.fromHandle, text: v.text })),
+  };
+}
+
+/**
+ * The three numbers /proof is allowed to know. Aggregates only: the events
+ * table has no handle column, so a per-person count is impossible to write,
+ * not just unwritten.
+ */
+export async function getProofCounts(): Promise<{
+  developed: number;
+  total: number;
+  sent: number;
+}> {
+  const [totalRow] = await db
+    .select({ n: count() })
+    .from(builders)
+    .where(eq(builders.optedOut, false));
+  const [developedRow] = await db
+    .select({ n: count() })
+    .from(builders)
+    .where(and(eq(builders.optedOut, false), isNotNull(builders.claimedAt)));
+  const [sentRow] = await db
+    .select({ n: count() })
+    .from(events)
+    .where(eq(events.kind, "share"));
+  return {
+    developed: developedRow?.n ?? 0,
+    total: totalRow?.n ?? 0,
+    sent: sentRow?.n ?? 0,
   };
 }
 

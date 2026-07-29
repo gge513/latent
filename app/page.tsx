@@ -36,7 +36,12 @@ export default async function Home() {
         <Space builders={builders} />
       </div>
 
-      <p className="mt-8 font-mono text-sm tracking-widest opacity-[var(--latent)]">
+      {/* Decorative signature, below AA on purpose; hidden from readers that
+          would announce it as content. */}
+      <p
+        aria-hidden="true"
+        className="mt-8 font-mono text-sm tracking-widest opacity-[var(--latent)]"
+      >
         latent · developing
       </p>
     </main>

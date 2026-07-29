@@ -113,13 +113,13 @@ export function Judgment({
                 setReason("");
                 setSettled(true);
               }}
-              className="font-mono text-xs tracking-widest opacity-50 transition-opacity hover:opacity-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--safelight)]"
+              className="font-mono text-xs tracking-widest opacity-55 transition-opacity hover:opacity-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--safelight)]"
             >
               skip
             </button>
           )}
         </div>
-        <p className="font-mono text-xs leading-relaxed opacity-40">
+        <p className="font-mono text-xs leading-relaxed opacity-55">
           One line, in your own words. It stays in this browser and is never
           sent to us.
         </p>
@@ -154,7 +154,7 @@ export function Judgment({
             setSettled(false);
             setTaken("no");
           }}
-          className="font-mono text-xs tracking-widest opacity-50 transition-opacity hover:opacity-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--safelight)]"
+          className="font-mono text-xs tracking-widest opacity-55 transition-opacity hover:opacity-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--safelight)]"
         >
           change what you said
         </button>
@@ -162,7 +162,7 @@ export function Judgment({
 
       {/* Reachability is the reward for claiming. We never guess at a way to
           reach someone who has not offered one. */}
-      <p className="max-w-xl font-mono text-xs leading-relaxed opacity-50">
+      <p className="max-w-xl font-mono text-xs leading-relaxed opacity-55">
         {claimed && contact
           ? `Reach them at ${contact}.`
           : `${name ?? `@${handle}`} has not claimed this card yet, so there is no channel here to send it through. Their GitHub profile is on their page.`}

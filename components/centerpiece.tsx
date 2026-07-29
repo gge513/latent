@@ -222,7 +222,7 @@ export function Centerpiece() {
             develop
           </button>
         </div>
-        <p className="max-w-md text-center font-mono text-xs leading-relaxed tracking-wide opacity-50">
+        <p className="max-w-md text-center font-mono text-xs leading-relaxed tracking-wide opacity-55">
           {listening
             ? "listening · say the sentence, then stop"
             : "Say it out loud, or type it. Nothing is stored: no audio, no transcript."}
@@ -241,7 +241,7 @@ export function Centerpiece() {
       {(sections.length > 0 || placeholders > 0 || failed) && (
         <div aria-live="polite" className="flex w-full max-w-2xl flex-col gap-6 pb-24">
           {simpleMatch && (
-            <p className="font-mono text-xs tracking-wide opacity-50">
+            <p className="font-mono text-xs tracking-wide opacity-55">
               the simple match · written explanations are offline right now
             </p>
           )}
@@ -270,7 +270,10 @@ export function Centerpiece() {
                   isPicked
                     ? "border-[var(--safelight)] opacity-100"
                     : receded
-                      ? "border-[color-mix(in_srgb,var(--ink)_25%,transparent)] opacity-[var(--latent)]"
+                      ? // Receded, not buried: attention develops it back, so
+                        // "pick this one instead" always has a full-contrast
+                        // path — hover, or Tab landing inside it.
+                        "border-[color-mix(in_srgb,var(--ink)_25%,transparent)] opacity-[var(--latent)] hover:opacity-100 focus-within:opacity-100"
                       : "border-[color-mix(in_srgb,var(--ink)_25%,transparent)] opacity-100"
                 }`}
               >
