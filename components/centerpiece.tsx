@@ -2,8 +2,10 @@
 
 import { useRef, useState } from "react";
 
+import { Judgment } from "@/components/judgment";
 import { Mic } from "@/components/mic";
 import { SentenceFrame } from "@/components/sentence-frame";
+import { countEvent } from "@/lib/count";
 import {
   composeSentence,
   DEFAULT_MODE,
@@ -20,7 +22,13 @@ import {
  */
 
 type Section = { handle: string; text: string };
-type Meta = { handle: string; name: string | null; line: string | null };
+type Meta = {
+  handle: string;
+  name: string | null;
+  line: string | null;
+  claimed: boolean;
+  contact: string | null;
+};
 
 // The second blank holds THE WORK, never a person. This is George's own
 // production test from Monday, which is what exposed the old frame: he typed
@@ -83,6 +91,9 @@ export function Centerpiece() {
   const [meta, setMeta] = useState<Map<string, Meta>>(new Map());
   const [simpleMatch, setSimpleMatch] = useState(false);
   const [failed, setFailed] = useState(false);
+  // The buyer's judgment. Null until they exercise it, and the site never
+  // pre-picks for them.
+  const [picked, setPicked] = useState<string | null>(null);
   const spokeRef = useRef(false);
   const runningRef = useRef(false);
 
@@ -106,6 +117,7 @@ export function Centerpiece() {
     setSections([]);
     setFailed(false);
     setSimpleMatch(false);
+    setPicked(null);
     try {
       const res = await fetch("/api/match", {
         method: "POST",
@@ -239,23 +251,69 @@ export function Centerpiece() {
               try again shortly.
             </p>
           )}
-          {sections.map((s) => (
-            <article
-              key={s.handle}
-              className="border-l border-[color-mix(in_srgb,var(--ink)_25%,transparent)] py-1 pl-6 opacity-100 transition-opacity duration-700 motion-reduce:transition-none"
-            >
-              <h2 className="font-mono text-sm tracking-widest opacity-70">
-                @{s.handle}
-                {meta.get(s.handle)?.name ? ` · ${meta.get(s.handle)!.name}` : ""}
-              </h2>
-              <p className="mt-2 text-xl leading-relaxed">{s.text}</p>
-              {meta.get(s.handle)?.line && (
-                <p className="mt-3 font-mono text-xs leading-relaxed opacity-[var(--latent)]">
-                  {meta.get(s.handle)!.line}
-                </p>
-              )}
-            </article>
-          ))}
+          {/* The ask, once there is something to judge. One line, and it
+              names whose judgment this is. */}
+          {phase === "done" && sections.length > 1 && !picked && (
+            <p className="font-mono text-xs leading-relaxed tracking-wide opacity-60">
+              Three people, and you know your own work. Pick the one you would
+              actually talk to.
+            </p>
+          )}
+          {sections.map((s) => {
+            const m = meta.get(s.handle);
+            const isPicked = picked === s.handle;
+            const receded = picked !== null && !isPicked;
+            return (
+              <article
+                key={s.handle}
+                className={`border-l py-1 pl-6 transition-opacity duration-700 motion-reduce:transition-none ${
+                  isPicked
+                    ? "border-[var(--safelight)] opacity-100"
+                    : receded
+                      ? "border-[color-mix(in_srgb,var(--ink)_25%,transparent)] opacity-[var(--latent)]"
+                      : "border-[color-mix(in_srgb,var(--ink)_25%,transparent)] opacity-100"
+                }`}
+              >
+                <h2 className="font-mono text-sm tracking-widest opacity-70">
+                  @{s.handle}
+                  {m?.name ? ` · ${m.name}` : ""}
+                </h2>
+                <p className="mt-2 text-xl leading-relaxed">{s.text}</p>
+                {m?.line && (
+                  <p className="mt-3 font-mono text-xs leading-relaxed opacity-[var(--latent)]">
+                    {m.line}
+                  </p>
+                )}
+
+                {/* J2: the pick develops this card and the others recede. The
+                    buyer's judgment, made visible in the same grammar the rest
+                    of the site uses. */}
+                {phase === "done" && !isPicked && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setPicked(s.handle);
+                      countEvent("pick");
+                    }}
+                    className="mt-3 font-mono text-xs tracking-widest underline decoration-[color-mix(in_srgb,var(--ink)_35%,transparent)] underline-offset-4 opacity-60 transition-opacity hover:opacity-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--safelight)]"
+                  >
+                    {receded ? "pick this one instead" : "pick this one"}
+                  </button>
+                )}
+
+                {isPicked && (
+                  <Judgment
+                    key={s.handle}
+                    handle={s.handle}
+                    name={m?.name ?? null}
+                    claimed={m?.claimed ?? false}
+                    contact={m?.contact ?? null}
+                    sentence={composeSentence(blank1, blank2, mode)}
+                  />
+                )}
+              </article>
+            );
+          })}
           {Array.from({ length: placeholders }).map((_, i) => (
             <div
               key={`latent-${i}`}

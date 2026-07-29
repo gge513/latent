@@ -22,6 +22,10 @@ export const builders = latent.table("builders", {
   latentLine: text("latent_line"),
   // THEIR words, written at claim. The real content
   developedLine: text("developed_line"),
+  // How they want to be reached, in their words. Written ONLY at claim, never
+  // derived from GitHub, never shown before claiming. Reachability is the
+  // reward for claiming: unclaimed cannot be reached.
+  contact: text("contact"),
   // precomputed spatial position; no live layout computation
   x: real("x"),
   y: real("y"),

@@ -15,6 +15,10 @@ export type BuilderForMatching = {
   latentLine: string | null;
   developedLine: string | null;
   vouches: string[];
+  // Claim state, so the result can be honest about who can be reached.
+  // Never fed to the model: it decides fit, not availability.
+  claimedAt: Date | null;
+  contact: string | null;
 };
 
 const STOP = new Set([

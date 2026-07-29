@@ -51,16 +51,30 @@ async function loadPool(): Promise<BuilderForMatching[]> {
     latentLine: r.latentLine,
     developedLine: r.developedLine,
     vouches: byHandle.get(r.handle) ?? [],
+    claimedAt: r.claimedAt,
+    contact: r.contact,
   }));
 }
 
-type Meta = { handle: string; name: string | null; line: string | null };
+type Meta = {
+  handle: string;
+  name: string | null;
+  line: string | null;
+  // Reachability is the reward for claiming. `contact` is the channel they
+  // chose themselves at claim time, and it is null for everyone who has not
+  // claimed, so an unclaimed card cannot be reached through this site.
+  claimed: boolean;
+  contact: string | null;
+};
 
 function metaFor(b: BuilderForMatching): Meta {
+  const claimed = b.claimedAt !== null;
   return {
     handle: b.handle,
     name: b.displayName,
     line: b.developedLine ?? b.latentLine,
+    claimed,
+    contact: claimed ? b.contact : null,
   };
 }
 
@@ -71,8 +85,19 @@ function sectionsFor(matches: { handle: string; explanation: string }[]): string
 /** Rung 3: same wire format, keyword matches, plainly labelled by lib/match. */
 function fallbackResponse(query: string, pool: BuilderForMatching[]): Response {
   const matches = keywordMatches(query, pool);
+  const byHandle = new Map(pool.map((b) => [b.handle, b]));
   const header =
-    JSON.stringify({ mode: "keyword", candidates: matches.map((m) => ({ handle: m.handle, name: m.displayName, line: null })) }) + "\n";
+    JSON.stringify({
+      mode: "keyword",
+      // Rung 3 carries the same claim state as rung 1, so the judgment moment
+      // works identically when the model is offline.
+      candidates: matches.map((m) => {
+        const b = byHandle.get(m.handle);
+        return b
+          ? { ...metaFor(b), line: null }
+          : { handle: m.handle, name: m.displayName, line: null, claimed: false, contact: null };
+      }),
+    }) + "\n";
   return new Response(header + sectionsFor(matches), {
     headers: { "content-type": "text/plain; charset=utf-8", "cache-control": "no-store" },
   });

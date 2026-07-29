@@ -13,8 +13,19 @@ import { rateLimit } from "@/lib/db/schema";
 const WINDOW = "10 minutes";
 const LIMIT = 10;
 
-export async function allowRequest(ip: string): Promise<boolean> {
-  const ipHash = createHash("sha256").update(`latent:${ip}`).digest("hex");
+/**
+ * Buckets keep one endpoint from eating another's window. The match endpoint
+ * spends money and gets the tight budget; free writes like the aggregate
+ * counter get their own, so counting a share can never cost someone a match.
+ */
+export async function allowRequest(
+  ip: string,
+  bucket = "match",
+  limit = LIMIT
+): Promise<boolean> {
+  const ipHash = createHash("sha256")
+    .update(`latent:${bucket}:${ip}`)
+    .digest("hex");
   try {
     const rows = await db
       .insert(rateLimit)
@@ -27,7 +38,7 @@ export async function allowRequest(ip: string): Promise<boolean> {
         },
       })
       .returning({ count: rateLimit.count });
-    return (rows[0]?.count ?? LIMIT + 1) <= LIMIT;
+    return (rows[0]?.count ?? limit + 1) <= limit;
   } catch {
     // Fail closed: no limiter, no model spend. Caller serves the fallback.
     return false;
