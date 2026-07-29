@@ -12,7 +12,21 @@ import { getSpace } from "@/lib/builders";
 export const revalidate = 300;
 
 export default async function Home() {
-  const builders = await getSpace();
+  // The page is generated at build time and revalidated every five minutes.
+  // If the database is unreachable at build — a fork, or CI running the build
+  // gate without credentials — render the centerpiece over an empty space
+  // rather than failing the build outright. The next revalidation repairs it,
+  // so the worst case is five minutes of a thin page instead of a dead deploy.
+  // The centerpiece itself reads the database per request, so it is unaffected.
+  let builders: Awaited<ReturnType<typeof getSpace>> = [];
+  try {
+    builders = await getSpace();
+  } catch (err) {
+    console.warn(
+      "Home: database unreachable, rendering an empty space.",
+      err instanceof Error ? err.message : err
+    );
+  }
 
   return (
     <main className="flex min-h-screen flex-col items-center py-24">

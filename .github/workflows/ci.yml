@@ -9,10 +9,21 @@ on:
 
 # Two independent gates.
 #
-# `build` always runs and needs no credentials: lint plus the production build,
-# which is also the typecheck gate. lib/db throws at module scope without a
-# DATABASE_URL, so a syntactically valid placeholder is present — nothing
-# connects to it.
+# `build` always runs: lint plus the production build, which is also the
+# typecheck gate.
+#
+# It uses the real DATABASE_URL when the secret is present, so CI builds the
+# same way Vercel does, prerendering all thirty builder pages. Without the
+# secret it falls back to a placeholder that cannot connect, and the build still
+# goes green: generateStaticParams and the home page both tolerate an
+# unreachable database at BUILD time and fall back to on-demand rendering.
+#
+# That tolerance was added because of this workflow's first run, which went red
+# here. The shape of this file was lifted from Tavern, whose comment said every
+# route was dynamic so a placeholder was enough. That is not true of latent —
+# /b/[handle] prerenders from the database — and the claim was carried over
+# without being checked. CI caught it on the first push, which is the argument
+# for having it.
 #
 # Lint is BLOCKING here. Tavern had to run it with continue-on-error because of
 # a pre-existing violation in its chat loop; latent's was fixed before CI landed
@@ -37,8 +48,11 @@ jobs:
       - run: npm run lint
       - run: npm run build
         env:
-          # Never connected to. Present only because lib/db throws without it.
-          DATABASE_URL: postgresql://user:pass@localhost:5432/placeholder
+          # Real when the secret exists, so CI prerenders what Vercel does.
+          # Otherwise a placeholder that cannot connect, which the build
+          # tolerates: lib/db throws at module scope without any value at all,
+          # so something has to be here.
+          DATABASE_URL: ${{ secrets.DATABASE_URL || 'postgresql://user:pass@localhost:5432/placeholder' }}
           AUTH_SECRET: build-time-placeholder
 
   preflight:

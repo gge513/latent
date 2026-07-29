@@ -17,9 +17,30 @@ import { getBuilder, getHandles } from "@/lib/builders";
 
 export const revalidate = 300;
 
+/**
+ * Prerender every builder's page when the database is reachable at build time,
+ * which is the normal deploy path.
+ *
+ * When it is not reachable — a fork, or CI running the build gate without
+ * credentials — return nothing and let the pages render on demand instead of
+ * failing the build. `dynamicParams` is true by default, so the route still
+ * works; only the prerendering is skipped.
+ *
+ * This is deliberately narrow. It swallows a connection failure at BUILD time
+ * only. A database failure while serving a request still throws, loudly, which
+ * is what it should do.
+ */
 export async function generateStaticParams() {
-  const handles = await getHandles();
-  return handles.map((handle) => ({ handle }));
+  try {
+    const handles = await getHandles();
+    return handles.map((handle) => ({ handle }));
+  } catch (err) {
+    console.warn(
+      "generateStaticParams: database unreachable, rendering /b/[handle] on demand.",
+      err instanceof Error ? err.message : err
+    );
+    return [];
+  }
 }
 
 export async function generateMetadata({
