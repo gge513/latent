@@ -82,6 +82,36 @@ export async function getBuilder(handle: string): Promise<BuilderProfile | null>
 }
 
 /**
+ * The signed-in builder's own row, for /claim only. This is the one read
+ * that does NOT filter optedOut: a person always gets to see and reverse
+ * their own removal, even though no public surface can.
+ */
+export async function getOwnCard(handle: string): Promise<{
+  handle: string;
+  displayName: string | null;
+  latentLine: string | null;
+  developedLine: string | null;
+  contact: string | null;
+  claimed: boolean;
+  optedOut: boolean;
+} | null> {
+  const [row] = await db
+    .select()
+    .from(builders)
+    .where(eq(builders.handle, handle.toLowerCase()));
+  if (!row) return null;
+  return {
+    handle: row.handle,
+    displayName: row.displayName,
+    latentLine: row.latentLine,
+    developedLine: row.developedLine,
+    contact: row.contact,
+    claimed: row.claimedAt !== null,
+    optedOut: row.optedOut,
+  };
+}
+
+/**
  * The three numbers /proof is allowed to know. Aggregates only: the events
  * table has no handle column, so a per-person count is impossible to write,
  * not just unwritten.

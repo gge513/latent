@@ -85,7 +85,7 @@ export default async function BuilderPage({
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-2xl flex-col gap-10 px-6 py-24">
       <header>
-        <p className="font-mono text-xs tracking-widest opacity-50">
+        <p className="font-mono text-xs tracking-widest opacity-55">
           @{builder.handle}
         </p>
         {builder.displayName && (
@@ -96,7 +96,7 @@ export default async function BuilderPage({
       {builder.developedLine ? (
         <section>
           <p className="text-2xl leading-relaxed">{builder.developedLine}</p>
-          <p className="mt-3 font-mono text-xs tracking-wide opacity-40">
+          <p className="mt-3 font-mono text-xs tracking-wide opacity-55">
             in their own words
           </p>
         </section>
@@ -106,11 +106,15 @@ export default async function BuilderPage({
             <p className="text-2xl leading-relaxed opacity-70">
               {builder.latentLine}
             </p>
-            {/* The claim flow is Friday's row. No link until the page exists:
-                a dead link is worse than a missing one. */}
-            <p className="mt-3 font-mono text-xs leading-relaxed tracking-wide opacity-40">
+            <p className="mt-3 font-mono text-xs leading-relaxed tracking-wide opacity-55">
               This card is latent. The line above was read from public GitHub,
-              not written by {builder.handle}.
+              not written by {builder.handle}.{" "}
+              <Link
+                href="/claim"
+                className="underline decoration-[color-mix(in_srgb,var(--ink)_30%,transparent)] underline-offset-4 hover:decoration-[var(--safelight)]"
+              >
+                Yours? Develop it.
+              </Link>
             </p>
           </section>
         )
@@ -118,7 +122,7 @@ export default async function BuilderPage({
 
       {builder.vouches.length > 0 && (
         <section className="flex flex-col gap-4">
-          <h2 className="font-mono text-xs tracking-widest opacity-50">
+          <h2 className="font-mono text-xs tracking-widest opacity-55">
             observed by people who worked alongside them
           </h2>
           {builder.vouches.map((v, i) => (
@@ -127,7 +131,7 @@ export default async function BuilderPage({
               className="border-l border-[color-mix(in_srgb,var(--ink)_25%,transparent)] pl-5"
             >
               <p className="text-lg leading-relaxed">{v.text}</p>
-              <cite className="mt-2 block font-mono text-xs not-italic opacity-50">
+              <cite className="mt-2 block font-mono text-xs not-italic opacity-55">
                 @{v.from}
               </cite>
             </blockquote>
@@ -137,7 +141,7 @@ export default async function BuilderPage({
 
       {(builder.languages.length > 0 || repos.length > 0) && (
         <section className="flex flex-col gap-4">
-          <h2 className="font-mono text-xs tracking-widest opacity-50">
+          <h2 className="font-mono text-xs tracking-widest opacity-55">
             what is public on GitHub
           </h2>
           {builder.languages.length > 0 && (
