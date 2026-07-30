@@ -119,14 +119,19 @@ export default async function BuilderPage({
             </p>
             <p className="mt-3 font-mono text-xs leading-relaxed tracking-wide opacity-55">
               This card is latent. The line above was read from public GitHub,
-              not written by {builder.handle}.{" "}
-              <Link
-                href="/claim"
-                className="underline decoration-[color-mix(in_srgb,var(--ink)_30%,transparent)] underline-offset-4 hover:decoration-[var(--safelight)]"
-              >
-                Yours? Develop it.
-              </Link>
+              not written by {builder.handle}.
             </p>
+            {/* The activation ask. On a latent card this IS the single call to
+                action, which is what earns safelight under the palette rule,
+                and it gets its own line at full contrast rather than trailing
+                a paragraph of explanation. It was the least prominent thing on
+                the page and it is the door to the whole loop. */}
+            <Link
+              href="/claim"
+              className="mt-5 inline-block border-b border-transparent font-mono text-sm tracking-widest text-[var(--safelight)] transition-colors hover:border-[var(--safelight)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--safelight)]"
+            >
+              Yours? Develop it.
+            </Link>
           </section>
         )
       )}
