@@ -84,12 +84,23 @@ export default async function BuilderPage({
 
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-2xl flex-col gap-10 px-6 py-24">
+      {/* A claimed card leads with the name they chose, so the handle above it
+          is a label. An unclaimed card has no name, and without this branch the
+          page would have no h1 at all — which was true of twenty-nine of the
+          thirty. The handle carries the heading in that case. Nothing moves
+          visually: the styles are unchanged, only the element. */}
       <header>
-        <p className="font-mono text-xs tracking-widest opacity-55">
-          @{builder.handle}
-        </p>
-        {builder.displayName && (
-          <h1 className="mt-2 text-4xl leading-tight">{builder.displayName}</h1>
+        {builder.displayName ? (
+          <>
+            <p className="font-mono text-xs tracking-widest opacity-55">
+              @{builder.handle}
+            </p>
+            <h1 className="mt-2 text-4xl leading-tight">{builder.displayName}</h1>
+          </>
+        ) : (
+          <h1 className="font-mono text-xs tracking-widest opacity-55">
+            @{builder.handle}
+          </h1>
         )}
       </header>
 

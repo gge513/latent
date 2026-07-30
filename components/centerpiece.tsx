@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRef, useState } from "react";
 
 import { Judgment } from "@/components/judgment";
@@ -277,8 +278,20 @@ export function Centerpiece() {
                       : "border-[color-mix(in_srgb,var(--ink)_25%,transparent)] opacity-100"
                 }`}
               >
+                {/* The handle goes to their page. In a new tab on purpose:
+                    nothing about a match is persisted, so navigating away in
+                    this tab would destroy the matches, the pick and the
+                    written message, and the only way back is to run the whole
+                    thing again. Checking someone out should not cost that. */}
                 <h2 className="font-mono text-sm tracking-widest opacity-70">
-                  @{s.handle}
+                  <Link
+                    href={`/b/${s.handle}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline decoration-[color-mix(in_srgb,var(--ink)_35%,transparent)] underline-offset-4 transition-opacity hover:opacity-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--safelight)]"
+                  >
+                    @{s.handle}
+                  </Link>
                   {m?.name ? ` · ${m.name}` : ""}
                 </h2>
                 <p className="mt-2 text-xl leading-relaxed">{s.text}</p>
