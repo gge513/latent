@@ -1,6 +1,6 @@
 import "server-only";
 
-import { and, asc, count, eq, isNotNull } from "drizzle-orm";
+import { and, asc, count, eq, isNotNull, ne } from "drizzle-orm";
 
 import type { SpaceBuilder } from "@/lib/builder-card";
 import { db } from "@/lib/db";
@@ -86,6 +86,43 @@ export async function getBuilder(handle: string): Promise<BuilderProfile | null>
  * that does NOT filter optedOut: a person always gets to see and reverse
  * their own removal, even though no public surface can.
  */
+/**
+ * One real claimed line, written by someone other than the person looking, to
+ * show on the claim form as an example of shape.
+ *
+ * It is deliberately not a hardcoded sample. The only model otherwise in view
+ * is the machine's line about them, which is inventory-shaped ("Fourteen
+ * public repos, mostly TypeScript..."), and copying that shape is exactly the
+ * failure this is meant to prevent. A real line from a peer teaches the right
+ * register, and it improves on its own as more people claim.
+ *
+ * Oldest claim first, so the example is stable rather than changing under
+ * someone mid-sentence. Returns null when nobody else has claimed yet, and
+ * the form simply shows no example.
+ */
+export async function getExampleLine(
+  excludeHandle: string
+): Promise<{ handle: string; line: string } | null> {
+  const [row] = await db
+    .select({
+      handle: builders.handle,
+      developedLine: builders.developedLine,
+    })
+    .from(builders)
+    .where(
+      and(
+        isNotNull(builders.claimedAt),
+        isNotNull(builders.developedLine),
+        eq(builders.optedOut, false),
+        ne(builders.handle, excludeHandle.toLowerCase())
+      )
+    )
+    .orderBy(asc(builders.claimedAt))
+    .limit(1);
+  if (!row?.developedLine) return null;
+  return { handle: row.handle, line: row.developedLine };
+}
+
 export async function getOwnCard(handle: string): Promise<{
   handle: string;
   displayName: string | null;

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { getSession } from "@/auth";
-import { getOwnCard } from "@/lib/builders";
+import { getExampleLine, getOwnCard } from "@/lib/builders";
 import {
   claimCard,
   removeCard,
@@ -46,6 +46,13 @@ export default async function Claim({
   const [session, params] = await Promise.all([getSession(), searchParams]);
   const login = session?.user?.login ?? null;
   const card = login ? await getOwnCard(login) : null;
+  // Only fetched when there is a form to show it on, and only for someone who
+  // has not written their line yet. A person editing their own line does not
+  // need to be shown how.
+  const example =
+    card && !card.optedOut && !card.claimed
+      ? await getExampleLine(card.handle)
+      : null;
 
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-2xl flex-col justify-center gap-10 px-6 py-24">
@@ -141,8 +148,22 @@ export default async function Claim({
               required
               maxLength={240}
               defaultValue={card.developedLine ?? ""}
+              aria-describedby={example ? "line-example" : undefined}
               className={`${field} italic`}
             />
+            {/* A real line someone else wrote, not an invented sample. The only
+                other model in view is the machine's line about them, which is
+                a list of repositories, and a list is the one thing this field
+                should not become. */}
+            {example && (
+              <p
+                id="line-example"
+                className="max-w-lg font-mono text-xs leading-relaxed opacity-55"
+              >
+                A line is short and it is yours. @{example.handle} wrote:{" "}
+                <span className="italic">&ldquo;{example.line}&rdquo;</span>
+              </p>
+            )}
           </div>
 
           <div className="flex flex-col gap-2">
