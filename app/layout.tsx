@@ -38,7 +38,7 @@ const plexMono = localFont({
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: "Latent",
-  description: "Thirty builders, developing.",
+  description: "The builders, developing.",
 };
 
 export default function RootLayout({

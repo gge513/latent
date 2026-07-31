@@ -10,6 +10,11 @@ import { siteUrl } from "@/lib/site";
  * an unreachable database yields the static pages rather than a failed build.
  */
 
+// Cached route handler by default; without this it freezes at first-build
+// data (caught in the Fri 7/31 local drive: 30 builders and 1 entry on a
+// site that had 31 and 5). Same clock as every other data page.
+export const revalidate = 300;
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticPages: MetadataRoute.Sitemap = [
     { url: siteUrl, changeFrequency: "daily" },

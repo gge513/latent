@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { generateDigest } from "@/lib/digest";
+import { generateSpotlight } from "@/lib/spotlight";
 
 /**
  * The daily cron target (vercel.json `crons`). This route is what makes
@@ -26,8 +27,12 @@ export async function GET(request: Request) {
   }
 
   try {
-    const result = await generateDigest(new Date());
-    return NextResponse.json(result);
+    // The daily pair: the digest (what shipped), then one spotlight from the
+    // drip (who's next in the deterministic order). Demos never run here —
+    // they spend a model call and the fixture list is finite.
+    const digest = await generateDigest(new Date());
+    const spotlight = await generateSpotlight(new Date());
+    return NextResponse.json({ digest, spotlight });
   } catch (err) {
     console.error(
       "cron/digest failed:",

@@ -110,7 +110,7 @@ export async function generateDigest(now: Date): Promise<DigestResult> {
     let line = `- @${s.handle} pushed \`${s.repo}\``;
     if (s.language) line += ` (${s.language})`;
     if (s.description) line += `: ${s.description}`;
-    if (s.homepage) line += ` — live at ${s.homepage}`;
+    if (s.homepage) line += `, live at ${s.homepage}`;
     return line;
   });
 

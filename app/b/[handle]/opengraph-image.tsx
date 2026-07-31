@@ -42,7 +42,7 @@ export default async function Image({
   const line =
     builder?.developedLine ??
     builder?.latentLine ??
-    "One of thirty builders.";
+    "One of the builders.";
   const developed = Boolean(builder?.developedLine);
 
   return new ImageResponse(

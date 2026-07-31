@@ -236,7 +236,7 @@ export function Space({ builders }: { builders: SpaceBuilder[] }) {
           id="space-heading"
           className="font-mono text-xs tracking-widest opacity-60"
         >
-          all thirty builders
+          all {builders.length} builders
         </h2>
         <p className="mt-3 font-mono text-xs leading-relaxed opacity-55">
           Builders who work on similar things sit near each other. Nothing here

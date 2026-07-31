@@ -1,0 +1,14 @@
+[
+  {
+    "id": "patient-community",
+    "sentence": "I am a nonprofit director looking to build a patient community app with AI"
+  },
+  {
+    "id": "ops-dashboard",
+    "sentence": "I am a founder looking to build an internal operations dashboard for my small team"
+  },
+  {
+    "id": "mobile-marketplace",
+    "sentence": "I am a recruiter looking for someone to build a mobile-first marketplace prototype"
+  }
+]

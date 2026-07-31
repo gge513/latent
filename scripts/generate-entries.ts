@@ -1,4 +1,6 @@
+import { generateDemo } from "../lib/demo";
 import { generateDigest } from "../lib/digest";
+import { generateSpotlight } from "../lib/spotlight";
 
 /**
  * The broad engine's CLI (`npm run db:entries`, BUILD-PLAN §14). Same
@@ -14,19 +16,46 @@ async function main() {
   const kindArg = process.argv.find((a) => a.startsWith("--kind="));
   const kind = kindArg ? kindArg.split("=")[1] : "digest";
 
+  const countArg = process.argv.find((a) => a.startsWith("--count="));
+  const count = countArg ? Number(countArg.split("=")[1]) : 1;
+
   if (kind === "digest") {
     const result = await generateDigest(new Date());
-    if (result.created) {
-      console.log(`wrote ${result.slug}: ${result.count} pushes`);
-    } else {
-      console.log(`no entry (${result.reason}) — ${result.slug}`);
+    console.log(
+      result.created
+        ? `wrote ${result.slug}: ${result.count} pushes`
+        : `no entry (${result.reason}): ${result.slug}`
+    );
+    return;
+  }
+
+  if (kind === "spotlight") {
+    for (let i = 0; i < count; i++) {
+      const result = await generateSpotlight(new Date());
+      console.log(
+        result.created
+          ? `wrote ${result.slug}`
+          : `no entry (${result.reason})`
+      );
+      if (!result.created) break;
     }
     return;
   }
 
-  throw new Error(
-    `Unknown kind "${kind}". Built so far: digest. Spotlight and demo are the Friday row.`
-  );
+  if (kind === "demo") {
+    for (let i = 0; i < count; i++) {
+      const result = await generateDemo(new Date());
+      console.log(
+        result.created
+          ? `wrote ${result.slug}`
+          : `no entry (${result.reason})`
+      );
+      if (!result.created) break;
+    }
+    return;
+  }
+
+  throw new Error(`Unknown kind "${kind}". Kinds: digest, spotlight, demo.`);
 }
 
 main().then(

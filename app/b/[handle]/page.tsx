@@ -56,7 +56,7 @@ export async function generateMetadata({
   const description =
     builder.developedLine ??
     builder.latentLine ??
-    "One of thirty builders, read from public GitHub.";
+    "One of the builders, read from public GitHub.";
 
   return {
     title: `${name} · Latent`,
