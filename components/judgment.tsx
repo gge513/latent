@@ -46,7 +46,7 @@ export function Judgment({
     : "";
   const message =
     `Hi ${name ?? `@${handle}`}, I found you through Latent, ` +
-    `where the cohort's work is shown as it stands. ` +
+    `where your work is shown as it stands. ` +
     `${sentence}.${because} ` +
     `Would you be open to a short conversation about it?`;
 

@@ -29,8 +29,10 @@ export const CONNECTIVE: Record<FrameMode, string> = {
 /**
  * Source mode only. Every entry names hiring on someone else's behalf as the
  * job itself — never a founder or operator who happens to be hiring.
- * PROVISIONAL: this list decides which sentence a stranger gets, and George
- * has not ratified it.
+ * RATIFIED by George 2026-07-31, as shipped. Bare "hr" is the one conscious
+ * yes ("our HR team is looking to build..." gets the recruiter sentence,
+ * rare and accepted). Bare "hiring" stays out so a founder hiring their
+ * first engineer keeps the builder sentence.
  */
 const SOURCE_TERMS = [
   "recruiter",

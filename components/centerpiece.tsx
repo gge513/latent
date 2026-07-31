@@ -194,6 +194,12 @@ export function Centerpiece() {
 
   return (
     <div className="flex w-full flex-col items-center gap-12 px-6">
+      {/* J6: the orientation line. Label first, instrument second — the eye
+          needs "what is this" before the sentence asks anything. Job-led by
+          George's ruling 2026-07-31; also the page's only h1. */}
+      <h1 className="font-mono text-xs tracking-widest opacity-60">
+        Say what you need built.
+      </h1>
       <SentenceFrame
         blank1={blank1}
         blank2={blank2}

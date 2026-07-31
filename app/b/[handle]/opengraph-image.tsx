@@ -17,7 +17,7 @@ import { getBuilder } from "@/lib/builders";
  * two families the site self-hosts as woff2.
  */
 
-export const alt = "A builder in the Latent cohort";
+export const alt = "A builder on Latent";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -42,7 +42,7 @@ export default async function Image({
   const line =
     builder?.developedLine ??
     builder?.latentLine ??
-    "A builder in the cohort.";
+    "One of thirty builders.";
   const developed = Boolean(builder?.developedLine);
 
   return new ImageResponse(

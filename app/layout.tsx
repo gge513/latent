@@ -38,7 +38,7 @@ const siteUrl =
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: "Latent",
-  description: "A cohort of builders, developing.",
+  description: "Thirty builders, developing.",
 };
 
 export default function RootLayout({
