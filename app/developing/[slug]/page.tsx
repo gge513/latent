@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 
 import { EntryBody } from "@/components/entry-body";
 import { getEntry, getEntrySlugs } from "@/lib/entries";
+import { siteUrl } from "@/lib/site";
 
 /**
  * One entry, addressable — the programmatic-SEO unit of the broad engine.
@@ -49,8 +50,24 @@ export default async function EntryPage({
   const entry = await getEntry(slug);
   if (!entry) notFound();
 
+  // Structured data for the pSEO unit: crawlers read the entry as an
+  // article with a real date and publisher. JSON.stringify escapes the
+  // content; nothing user-typed ever reaches an entry body.
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: entry.title,
+    datePublished: entry.publishedAt.toISOString(),
+    url: `${siteUrl}/developing/${entry.slug}`,
+    publisher: { "@type": "Organization", name: "Latent" },
+  };
+
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-2xl flex-col gap-10 px-6 py-24">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <div className="flex items-baseline gap-4">
         <span className="font-mono text-xs tracking-widest opacity-70">
           {entry.publishedAt.toISOString().slice(0, 10)}

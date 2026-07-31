@@ -39,6 +39,10 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: "Latent",
   description: "The builders, developing.",
+  // RSS autodiscovery: readers and browsers find the feed from any page.
+  alternates: {
+    types: { "application/rss+xml": "/developing/feed.xml" },
+  },
 };
 
 export default function RootLayout({
