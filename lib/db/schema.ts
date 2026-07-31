@@ -62,6 +62,26 @@ export const events = latent.table("events", {
     .defaultNow(),
 });
 
+// The broad engine (BUILD-PLAN §14): the site's self-written marketing copy.
+// Every machine entry carries a sourceRef so it can show its receipts; essays
+// are inserted only from George-approved text, never generated here.
+export const entries = latent.table("entries", {
+  id: serial("id").primaryKey(),
+  // 'digest' | 'spotlight' | 'demo' | 'essay'
+  kind: text("kind").notNull(),
+  slug: text("slug").notNull().unique(),
+  title: text("title").notNull(),
+  // simple markdown: paragraphs and "- " list lines
+  body: text("body").notNull(),
+  // spotlights only; consent is enforced at generation, not here
+  handle: text("handle"),
+  // the run/repo/commit the entry was generated from
+  sourceRef: text("source_ref"),
+  publishedAt: timestamp("published_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+});
+
 export const rateLimit = latent.table("rate_limit", {
   ipHash: text("ip_hash").primaryKey(),
   windowStart: timestamp("window_start", { withTimezone: true }).notNull(),

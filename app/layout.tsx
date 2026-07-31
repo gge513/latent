@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 
+import { siteUrl } from "@/lib/site";
+
 const newsreader = localFont({
   src: [
     {
@@ -32,8 +34,6 @@ const plexMono = localFont({
  * Slack and LinkedIn require. Without it every share card resolves against
  * localhost and silently fails to unfurl.
  */
-const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://latent-nu.vercel.app";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),

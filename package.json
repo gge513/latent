@@ -13,6 +13,7 @@
     "db:lines": "tsx --env-file=.env scripts/generate-lines.ts",
     "db:layout": "tsx --env-file=.env scripts/layout.ts",
     "db:vouches": "tsx --env-file=.env scripts/seed-vouches.ts",
+    "db:entries": "tsx --env-file=.env scripts/generate-entries.ts",
     "test": "tsx --env-file=.env scripts/integration-smoke.mts"
   },
   "dependencies": {
