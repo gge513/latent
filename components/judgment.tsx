@@ -51,6 +51,23 @@ export function Judgment({
     `Would you be open to a short conversation about it?`;
 
   /**
+   * The send door. A claimed builder chose their channel as free text, so the
+   * component reads what kind of door it is: an email becomes a mailto with
+   * the finished message already in the body, a URL opens beside the matches
+   * (navigating away would destroy them — nothing here is stored), anything
+   * else stays a plain line. When a door exists, sending is the one call to
+   * action and copying recedes to a peer.
+   */
+  const channel = contact?.trim() ?? "";
+  const isEmail = claimed && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(channel);
+  const isLink = claimed && /^https?:\/\/\S+$/i.test(channel);
+  const sendDoor = isEmail || isLink;
+  const mailto =
+    `mailto:${channel}` +
+    `?subject=${encodeURIComponent("Found you through Latent")}` +
+    `&body=${encodeURIComponent(message)}`;
+
+  /**
    * The clipboard is not guaranteed. It needs a secure context, a live user
    * gesture and a focused document, and any of the three can be missing. A
    * button that silently does nothing is the worst outcome, so the refusal has
@@ -137,10 +154,34 @@ export function Judgment({
       </p>
 
       <div className="flex flex-wrap items-center gap-5">
+        {isEmail && (
+          <a
+            href={mailto}
+            onClick={() => countEvent("share")}
+            className="font-mono text-xs tracking-widest text-[var(--safelight)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--safelight)]"
+          >
+            send it to {channel}
+          </a>
+        )}
+        {isLink && (
+          <a
+            href={channel}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => countEvent("share")}
+            className="font-mono text-xs tracking-widest text-[var(--safelight)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--safelight)]"
+          >
+            send it via {new URL(channel).hostname}
+          </a>
+        )}
         <button
           type="button"
           onClick={take}
-          className="font-mono text-xs tracking-widest text-[var(--safelight)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--safelight)]"
+          className={
+            sendDoor
+              ? "font-mono text-xs tracking-widest opacity-55 transition-opacity hover:opacity-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--safelight)]"
+              : "font-mono text-xs tracking-widest text-[var(--safelight)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--safelight)]"
+          }
         >
           {taken === "copied"
             ? "copied"
@@ -161,12 +202,15 @@ export function Judgment({
       </div>
 
       {/* Reachability is the reward for claiming. We never guess at a way to
-          reach someone who has not offered one. */}
-      <p className="max-w-xl font-mono text-xs leading-relaxed opacity-55">
-        {claimed && contact
-          ? `Reach them at ${contact}.`
-          : `${name ?? `@${handle}`} has not claimed this card yet, so there is no channel here to send it through. Their GitHub profile is on their page.`}
-      </p>
+          reach someone who has not offered one. When the channel opened a door
+          above, this line would only repeat it. */}
+      {!sendDoor && (
+        <p className="max-w-xl font-mono text-xs leading-relaxed opacity-55">
+          {claimed && contact
+            ? `Reach them at ${contact}.`
+            : `${name ?? `@${handle}`} has not claimed this card yet, so there is no channel here to send it through. Their GitHub profile is on their page.`}
+        </p>
+      )}
     </div>
   );
 }
