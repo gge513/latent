@@ -1,4 +1,7 @@
+import { after } from "next/server";
+
 import { allowRequest } from "@/lib/rate-limit";
+import { countEvent } from "@/lib/analytics";
 import { db } from "@/lib/db";
 import { events } from "@/lib/db/schema";
 
@@ -36,6 +39,9 @@ export async function POST(req: Request) {
     if (!(await allowRequest(ip, "event", 60))) return done;
 
     await db.insert(events).values({ kind });
+    // The mirror runs after the response, so a slow third party can never sit
+    // in front of the visitor's next interaction.
+    after(() => countEvent(kind));
   } catch {
     // Counted or not, the visitor's flow does not change.
   }

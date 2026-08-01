@@ -60,6 +60,11 @@ The only thing that reaches us is a count: that *a* match happened, that *a* pic
 carries no name, no handle, and no text, and the table it lands in has no column to put one in, so
 a per-person tally cannot exist even by accident.
 
+That count is also mirrored to PostHog, so we can read it as a trend instead of a running total.
+It is the same count and nothing more, sent from our server and filed under a single constant
+identity that is not a person. No PostHog script runs on this page. There is no cookie, no
+autocapture, no session recording, and no address recorded, so nothing here follows you off it.
+
 ## About the people on it
 
 Everyone here is a real person who has not necessarily agreed to be marketed to you.

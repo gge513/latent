@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import { auth, signIn, signOut } from "@/auth";
 import { eq } from "drizzle-orm";
 
+import { countEvent } from "@/lib/analytics";
 import { db } from "@/lib/db";
 import { builders, events } from "@/lib/db/schema";
 
@@ -84,6 +85,7 @@ export async function claimCard(formData: FormData): Promise<void> {
   if (!row.claimedAt) {
     try {
       await db.insert(events).values({ kind: "claim" });
+      await countEvent("claim");
     } catch {
       // counting is never load-bearing
     }
