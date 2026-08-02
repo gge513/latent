@@ -107,5 +107,57 @@ npm run dev
 
 The seeding scripts are all re-runnable and none of them overwrite a claimed field.
 
+### Routes
+
+Pages: `/`, `/b/[handle]`, `/claim`, `/proof`, `/developing`, `/developing/[slug]`.
+Feed: `/developing/feed.xml`. API: `/api/match`, `/api/event`, `/api/cron/digest`,
+`/api/auth/[...nextauth]`.
+
+### Schema
+
+`lib/db/schema.ts`, five tables:
+
+| Table | Shape | Note |
+|---|---|---|
+| `builders` | `handle` (PK), `displayName`, `github` (jsonb facts), `latentLine`, `developedLine`, `contact`, `x`/`y`, `claimedAt`, `optedOut`, `updatedAt` | `x`/`y` are the spatial layout. `optedOut` is `not null default false` |
+| `entries` | `id`, `kind`, `slug` (unique), `title`, `body`, `handle`, `sourceRef`, `publishedAt` | The `/developing` stream. The unique slug makes the spotlight run idempotent per builder |
+| `vouches` | `id`, `toHandle`, `fromHandle`, `text`, `createdAt` | Peer vouches on a card |
+| `events` | `id`, `kind`, `createdAt` | **No handle, user or IP column, deliberately.** Aggregate counting only, enforced by the schema rather than by discipline |
+| rate limit | `ipHash` (PK), `windowStart`, `count` | Hashed, never the address itself |
+
+### The file map
+
+| File | What lives there |
+|---|---|
+| `lib/db/schema.ts` | The schema above |
+| `lib/claim.ts` | The claim write path. Every write keys off `session.user.login` and nothing else, so there is no card parameter to tamper with. Removal is immediate; `restoreCard()` is its inverse, so consent runs both directions |
+| `lib/match.ts`, `app/api/match/route.ts` | The three-rung matcher and its endpoint |
+| `lib/spotlight.ts` | The daily spotlight generator. Deterministic selection, skips opted-out builders |
+| `lib/entries.ts` | Server-only reads for `/developing` |
+| `lib/analytics.ts` | Aggregate-only counting, one constant identity, event kind as the whole payload |
+| `scripts/integration-smoke.mts` | The smoke below |
+
+### Degradation is designed, not incidental
+
+The matcher has three rungs: the model path, a deterministic ranking, and a keyword fallback. The
+bottom two need no API key and no model, so the product still answers a visitor's sentence with the
+model offline. `npm test` asserts that rather than assuming it.
+
+### What `npm test` actually proves
+
+`scripts/integration-smoke.mts` checks invariants instead of writing rows, which is why it is safe
+to point at any database including production:
+
+- the `events` table has no handle, builder, user or IP column, so the privacy claim on this site
+  is enforced by the schema
+- the `builders` table carries a `contact` column
+- the roster is populated, every builder has a position in the space, every builder has a line to
+  show, and zero rows leak
+- deterministic ranking returns candidates with the model offline
+- the keyword rung returns matches
+
+CI (`.github/workflows/ci.yml`) runs three jobs on Node 22: lint and build, a check that no
+database credentials are committed, and this smoke, read-only.
+
 Deploys are git-connected: **a push to `main` is a production deploy.** Unfinished work belongs on
 a branch.
