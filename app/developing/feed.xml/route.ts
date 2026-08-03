@@ -41,8 +41,13 @@ export async function GET() {
     );
   }
 
+  // The stylesheet instruction is for browsers only. Feed readers ignore it
+  // and parse the RSS beneath, so this changes nothing about the feed and
+  // stops a person who clicks the link being handed raw XML. If a browser
+  // does not apply XSLT, they see exactly what they saw before.
   const xml =
     `<?xml version="1.0" encoding="UTF-8"?>` +
+    `<?xml-stylesheet type="text/xsl" href="/feed.xsl"?>` +
     `<rss version="2.0"><channel>` +
     `<title>Developing · Latent</title>` +
     `<link>${siteUrl}/developing</link>` +
