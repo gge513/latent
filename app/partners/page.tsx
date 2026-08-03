@@ -220,8 +220,20 @@ export default async function Partners() {
         {/* The address is an environment value, never a literal. A personal
             address hardcoded as a fallback ships in the repo and becomes the
             live value the moment the variable is unset, which is a mistake I
-            reviewed on a peer's build this week. Unset here means the form
-            still composes and simply offers no mail door. */}
+            reviewed on a peer's build this week.
+
+            DELIBERATELY UNSET as of 2026-08-03. It briefly pointed at a
+            personal address and George took it back off a public page: a
+            mailto on a public page is harvested by scrapers, and nobody was
+            monitoring the inbox, so the door promised a responsiveness that
+            did not exist. Unset means the form still composes the message and
+            hands it over, and simply offers no mail link, which is the
+            behaviour this prop was built for.
+
+            Note for whoever restores it: removing the variable is not enough
+            on its own. This page is prerendered, so the old value stays baked
+            into the payload until the next deploy. Setting or clearing it
+            always needs a redeploy and then a check of the live page. */}
         <IntroRequest to={process.env.INTRO_EMAIL ?? null} />
       </section>
 
