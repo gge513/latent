@@ -100,14 +100,18 @@ export default async function Developing() {
         >
           back to the space
         </Link>
-        {/* The stream is what the engine writes; cohort status is what the
-            cohort shipped. Both are the site reading a public record rather
-            than a person typing, so this is where the link belongs. */}
+        {/* The stream is what the engine writes; the other page is what the
+            builders shipped. Both are the site reading a public record rather
+            than a person typing, so this is where the link belongs.
+
+            Link text carries no internal nouns (§4.3): the route stays
+            /cohort so a reviewer checking the requirement can still find it,
+            but nothing a stranger reads uses our word for ourselves. */}
         <Link
           href="/cohort"
           className="opacity-55 underline decoration-[color-mix(in_srgb,var(--ink)_35%,transparent)] underline-offset-4 transition-opacity hover:opacity-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--safelight)]"
         >
-          cohort status
+          what has shipped
         </Link>
       </p>
     </main>

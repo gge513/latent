@@ -194,12 +194,30 @@ export function Centerpiece() {
 
   return (
     <div className="flex w-full flex-col items-center gap-12 px-6">
-      {/* J6: the orientation line. Label first, instrument second — the eye
-          needs "what is this" before the sentence asks anything. Job-led by
-          George's ruling 2026-07-31; also the page's only h1. */}
-      <h1 className="font-mono text-xs tracking-widest opacity-60">
-        Say what you need built.
-      </h1>
+      {/* J6: the orientation line, now two rungs of the §4.5 ladder rather
+          than one. Label first, instrument second: the eye needs "what is
+          this" before the sentence asks anything.
+
+          The identity line was added 2026-08-03. A stranger could previously
+          read who to be and what to do, but nothing said who was on the other
+          side, which is the fact a hiring partner needs before they will
+          engage with a blank. It sits above the job line because "who are
+          these people" precedes "what should I do", and it is deliberately
+          not an h1: the page keeps exactly one, and the job-led h1 stays as
+          George ruled it 2026-07-31.
+
+          Both stay visibly smaller than the sentence, per §4.5. If this block
+          ever reads as heavy as the ask, it has become a landing page by
+          degrees and it is wrong. */}
+      <div className="flex flex-col items-center gap-3">
+        <p className="max-w-sm text-center font-mono text-xs leading-relaxed tracking-wide opacity-55">
+          Thirty-one builders spent the summer shipping real products. Latent
+          is where you meet them.
+        </p>
+        <h1 className="font-mono text-xs tracking-widest opacity-60">
+          Say what you need built.
+        </h1>
+      </div>
       <SentenceFrame
         blank1={blank1}
         blank2={blank2}

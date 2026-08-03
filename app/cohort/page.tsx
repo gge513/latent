@@ -18,9 +18,9 @@ import { getCohortStatus } from "@/lib/cohort";
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: "Cohort status · Latent",
+  title: "What has shipped · Latent",
   description:
-    "Read-only cohort project status, counted from merged submission pull requests.",
+    "What the builders have shipped, counted from merged pull requests.",
 };
 
 function whenText(iso: string | null): string {
@@ -34,11 +34,11 @@ export default async function Cohort() {
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-2xl flex-col gap-10 px-6 py-24">
       <header>
-        <h1 className="text-3xl leading-tight">Cohort status</h1>
+        <h1 className="text-3xl leading-tight">What has shipped</h1>
         <p className="mt-3 leading-relaxed opacity-70">
-          What has actually shipped across the three phase-1 projects, counted
-          from merged submission pull requests on the cohort repository. Nothing
-          on this page is typed by hand.
+          What the builders have actually shipped across the three projects,
+          counted from merged pull requests in the repository the work lands
+          in. Nothing on this page is typed by hand.
         </p>
       </header>
 
@@ -78,10 +78,10 @@ export default async function Cohort() {
           directly from the GitHub API and refreshed hourly.
         </p>
         <p className="font-mono text-xs leading-relaxed opacity-55">
-          The cohort&rsquo;s project management platform is a private workspace
-          with no public read surface, so its own board cannot be mirrored here
-          without credentials. This reads the system of record instead: the
-          repository the submissions actually merge into.
+          The project management tool this work is tracked in is a private
+          workspace with no public read surface, so its own board cannot be
+          mirrored here without credentials. This reads the record instead:
+          the repository the work actually merges into.
         </p>
       </section>
 
