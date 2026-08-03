@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Fragment } from "react";
 
 /**
  * The site footer: two rows, deliberately, because they are two different
@@ -31,14 +32,28 @@ const DOORS = [
   { href: "/proof", label: "proof" },
 ] as const;
 
-const linkClass =
+/** The signature's one link keeps its underline: it is the primary row. */
+const signatureClass =
   "opacity-55 underline decoration-[color-mix(in_srgb,var(--ink)_35%,transparent)] underline-offset-4 transition-opacity hover:opacity-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--safelight)]";
+
+/**
+ * The doors carry no resting underline. Four permanent underlines was most of
+ * the visual weight in this block, and the rule arrives on attention instead.
+ *
+ * They stay at opacity-55 rather than dropping to --latent, which is what the
+ * site's own grammar would otherwise ask for. Measured: ink at 0.55 over base
+ * is 5.18:1 and clears the 4.5:1 floor for small text; --latent (0.28) is
+ * 2.25:1 and fails it. That is why opacity-55 recurs across this codebase.
+ * It is the contrast floor, not a taste.
+ */
+const doorClass =
+  "opacity-55 underline-offset-4 decoration-[color-mix(in_srgb,var(--ink)_35%,transparent)] transition-opacity hover:underline hover:opacity-100 focus-visible:underline focus-visible:opacity-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--safelight)]";
 
 export function SiteFooter({ current }: { current: string }) {
   const doors = DOORS.filter((d) => d.href !== current);
 
   return (
-    <footer className="mt-8 flex flex-col items-center gap-3">
+    <footer className="mt-16 flex flex-col items-center gap-3">
       <p className="font-mono text-sm tracking-widest">
         <span aria-hidden="true" className="opacity-[var(--latent)]">
           latent ·{" "}
@@ -46,20 +61,32 @@ export function SiteFooter({ current }: { current: string }) {
         {current === "/developing" ? (
           <span className="opacity-55">developing</span>
         ) : (
-          <Link href="/developing" className={linkClass}>
+          <Link href="/developing" className={signatureClass}>
             developing
           </Link>
         )}
       </p>
 
+      {/* Separated by the site's own "·" rather than by gaps, so the row
+          reads as one line in the same grammar as the signature above it
+          instead of three floating items. Inline rather than flex so it wraps
+          like text on a narrow screen. The separator is decorative and
+          aria-hidden, so it may sit at --latent where the links may not. */}
       <nav
         aria-label="More"
-        className="flex flex-wrap justify-center gap-x-5 gap-y-2 font-mono text-xs tracking-widest"
+        className="text-center font-mono text-xs leading-relaxed tracking-widest"
       >
-        {doors.map((d) => (
-          <Link key={d.href} href={d.href} className={linkClass}>
-            {d.label}
-          </Link>
+        {doors.map((d, i) => (
+          <Fragment key={d.href}>
+            {i > 0 && (
+              <span aria-hidden="true" className="opacity-[var(--latent)]">
+                {" · "}
+              </span>
+            )}
+            <Link href={d.href} className={doorClass}>
+              {d.label}
+            </Link>
+          </Fragment>
         ))}
       </nav>
     </footer>
