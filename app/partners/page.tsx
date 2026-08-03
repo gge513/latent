@@ -72,6 +72,52 @@ export default async function Partners() {
         </p>
       </section>
 
+      {/* Placement only, 2026-08-03. Every load-bearing sentence below is
+          George's, moved rather than written. Provenance:
+
+            para 1  DOCTRINE §1.1, verbatim.
+            para 2  DOCTRINE §7.2 (the darkroom quote) verbatim; "latent until
+                    they develop" verbatim; "develop out of the dark" and "the
+                    buyer is the photographer" from the shipped README. Person
+                    shifted to second, since this page addresses the reader.
+            para 3  DOCTRINE §1.3, verbatim, including "valuable twice".
+            closer  DOCTRINE §1.1 guardrail, verbatim.
+
+          The joins are the only new words. §7.2 is why the two ideas sit in
+          one section: latent-and-developing is not a second concept beside
+          proximity, it is "proximity stated as a physical process".
+
+          It sits above "who you can reach today" deliberately. With the
+          guardrail already said, the low claim count reads as the design
+          working rather than as a directory apologising for being empty. */}
+      <section className="flex flex-col gap-3">
+        <h2 className="font-mono text-xs tracking-widest opacity-55">
+          why this is not a directory
+        </h2>
+        <p className="leading-relaxed">
+          The sharing economy surfaced latent physical capacity: idle cars,
+          empty rooms, unused manufacturing lines. It did not create supply, it
+          made existing supply reachable. The frontier version is latent human
+          capacity: skill that exists but is not visible or reachable.
+        </p>
+        <p className="leading-relaxed">
+          When we think of things that develop it is relationships, working
+          styles, just like film. They are latent until they develop. So you
+          are not shopping a directory. You say what you are trying to do, and
+          the builders closest to that work develop out of the dark. You are
+          the photographer here.
+        </p>
+        <p className="leading-relaxed">
+          Everyone has someone that is just ahead of them in knowledge and
+          ability, enabling them not only to get the job done for them but
+          bring them along. That person is valuable twice: they do the thing,
+          and they pull you up behind them.
+        </p>
+        <p className="leading-relaxed opacity-70">
+          The skill is latent. The person is not idle.
+        </p>
+      </section>
+
       <section className="flex flex-col gap-3">
         <h2 className="font-mono text-xs tracking-widest opacity-55">
           who you can reach today
