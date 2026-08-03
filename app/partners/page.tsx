@@ -105,12 +105,23 @@ export default async function Partners() {
       {/* Placement only, 2026-08-03. Every load-bearing sentence below is
           George's, moved rather than written. Provenance:
 
-            para 1  DOCTRINE §1.1, verbatim.
-            para 2  DOCTRINE §7.2 (the darkroom quote) verbatim; "latent until
+            (DOCTRINE §1.1, the latent-capacity opener, cut 2026-08-03 by
+             George: most abstract passage on a page whose reader arrived
+             with a concrete problem. The beats below stand without it.)
+            para 1  DOCTRINE §7.2 (the darkroom quote) verbatim; "latent until
                     they develop" verbatim; "develop out of the dark" and "the
-                    buyer is the photographer" from the shipped README. Person
-                    shifted to second, since this page addresses the reader.
-            para 3  DOCTRINE §1.3, verbatim, including "valuable twice".
+                    buyer is the photographer here: they get a judgment moment"
+                    from the shipped README. Person shifted to second, since
+                    this page addresses the reader.
+
+                    Reordered 2026-08-03 so the claim lands first: the heading
+                    asks a question and this paragraph now opens the section,
+                    so it answers in four words rather than making the reader
+                    wait through the metaphor. The old pivot was a bare "So"
+                    carrying more than a conjunction can. The judgment-moment
+                    clause is restored because without it "you are the
+                    photographer" is a metaphor with nothing attached.
+            para 2  DOCTRINE §1.3, verbatim, including "valuable twice".
             closer  DOCTRINE §1.1 guardrail, verbatim.
 
           The joins are the only new words. §7.2 is why the two ideas sit in
@@ -125,17 +136,11 @@ export default async function Partners() {
           why this is not a directory
         </h2>
         <p className="leading-relaxed">
-          The sharing economy surfaced latent physical capacity: idle cars,
-          empty rooms, unused manufacturing lines. It did not create supply, it
-          made existing supply reachable. The frontier version is latent human
-          capacity: skill that exists but is not visible or reachable.
-        </p>
-        <p className="leading-relaxed">
-          When we think of things that develop it is relationships, working
-          styles, just like film. They are latent until they develop. So you
-          are not shopping a directory. You say what you are trying to do, and
+          You are not shopping a directory. When we think of things that
+          develop it is relationships, working styles, just like film: they are
+          latent until they develop. So you say what you are trying to do, and
           the builders closest to that work develop out of the dark. You are
-          the photographer here.
+          the photographer here: you get the judgment moment.
         </p>
         <p className="leading-relaxed">
           Everyone has someone that is just ahead of them in knowledge and
