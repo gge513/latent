@@ -12,7 +12,7 @@ thing for you.
 
 ## What this is
 
-Thirty builders spent the summer shipping real products. Latent is where you meet them.
+Thirty-one builders spent the summer shipping real products. Latent is where you meet them.
 
 You say one sentence: *"I am a nonprofit director looking to build a patient community app."* The
 site reads it against what these people have actually built, in public, and shows you the two or
@@ -44,7 +44,7 @@ map means only that two people work on similar things. Nobody is above anybody.
 |---|---|
 | **Say or type one sentence** | Speak it, or type it. Both work the same way; neither is a fallback for the other. |
 | **See it run** | One click plays a real example end to end with no input from you at all. |
-| **Browse the space** | Thirty people, positioned by what they work on. Move your attention across it and the work develops out of the dark. |
+| **Browse the space** | Thirty-one people, positioned by what they work on. Move your attention across it and the work develops out of the dark. |
 | **Read anyone's page** | Every builder has one, at `/b/their-handle`. Share it and it unfurls with a real card. |
 | **Pick one, and say why** | Your choice, your words, your message to send. |
 

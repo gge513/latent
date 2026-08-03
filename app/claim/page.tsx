@@ -84,8 +84,11 @@ export default async function Claim({
       {login && !card && (
         <section className="flex flex-col gap-4">
           <p className="max-w-lg text-lg leading-relaxed">
-            @{login} isn&rsquo;t one of the thirty builders in this space, so
-            there is no card here to claim.
+            {/* No count here on purpose. The roster changes when someone
+                opts out, and a hardcoded number in live copy goes stale
+                silently: this line said "thirty" while the space held 31. */}
+            @{login} isn&rsquo;t one of the builders in this space, so there is
+            no card here to claim.
           </p>
           <form action={signOutOfClaim}>
             <button type="submit" className={quiet}>
