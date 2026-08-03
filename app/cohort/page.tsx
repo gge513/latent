@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+
+import { SiteFooter } from "@/components/site-footer";
 
 import { getCohortStatus } from "@/lib/cohort";
 
@@ -84,21 +85,7 @@ export default async function Cohort() {
           the repository the work actually merges into.
         </p>
       </section>
-
-      <footer className="flex gap-5">
-        <Link
-          href="/partners"
-          className="font-mono text-xs tracking-widest opacity-60 underline decoration-[color-mix(in_srgb,var(--ink)_30%,transparent)] underline-offset-4 hover:opacity-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--safelight)]"
-        >
-          for partners
-        </Link>
-        <Link
-          href="/"
-          className="font-mono text-xs tracking-widest opacity-60 underline decoration-[color-mix(in_srgb,var(--ink)_30%,transparent)] underline-offset-4 hover:opacity-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--safelight)]"
-        >
-          back to the space
-        </Link>
-      </footer>
+      <SiteFooter current="/cohort" />
     </main>
   );
 }

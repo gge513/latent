@@ -364,6 +364,26 @@ export function Centerpiece() {
               <div className="mt-3 h-3 w-full max-w-md bg-[color-mix(in_srgb,var(--ink)_18%,transparent)]" />
             </div>
           ))}
+
+          {/* §4.5, the "after the match" rung: who these people are and why
+              trust them. This is the highest-intent moment on the site and the
+              only one where a partner has a concrete reason to ask how any of
+              this works, so it is where the partner surface belongs. It was
+              three clicks down behind two evidence pages, which is the wrong
+              depth for a page a reader arrives looking for rather than earns.
+
+              Only once the matches have actually landed: offering it mid-run
+              would be answering a question nobody has asked yet. */}
+          {phase === "done" && sections.length > 0 && (
+            <p className="mt-4 font-mono text-xs leading-relaxed opacity-55">
+              <Link
+                href="/partners"
+                className="underline decoration-[color-mix(in_srgb,var(--ink)_35%,transparent)] underline-offset-4 transition-opacity hover:opacity-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--safelight)]"
+              >
+                How this works, who you can reach, and what it costs
+              </Link>
+            </p>
+          )}
         </div>
       )}
     </div>

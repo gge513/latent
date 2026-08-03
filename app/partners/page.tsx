@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+
+import { SiteFooter } from "@/components/site-footer";
 
 import { getProofCounts } from "@/lib/builders";
 
@@ -126,21 +127,7 @@ export default async function Partners() {
           for a name, so a record of you cannot exist here even by accident.
         </p>
       </section>
-
-      <footer className="flex gap-5 font-mono text-xs tracking-widest">
-        <Link
-          href="/"
-          className="opacity-60 underline decoration-[color-mix(in_srgb,var(--ink)_30%,transparent)] underline-offset-4 hover:opacity-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--safelight)]"
-        >
-          find someone
-        </Link>
-        <Link
-          href="/cohort"
-          className="opacity-60 underline decoration-[color-mix(in_srgb,var(--ink)_30%,transparent)] underline-offset-4 hover:opacity-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--safelight)]"
-        >
-          what has shipped
-        </Link>
-      </footer>
+      <SiteFooter current="/partners" />
     </main>
   );
 }

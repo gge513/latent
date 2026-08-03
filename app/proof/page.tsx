@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+
+import { SiteFooter } from "@/components/site-footer";
 
 import { getProofCounts } from "@/lib/builders";
 
@@ -53,13 +54,7 @@ export default async function Proof() {
         visitor took away to send. Nothing else is counted, and nothing is
         counted per person: the table these come from has no name column.
       </p>
-
-      <Link
-        href="/"
-        className="font-mono text-xs tracking-widest opacity-55 underline decoration-[color-mix(in_srgb,var(--ink)_35%,transparent)] underline-offset-4 transition-opacity hover:opacity-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--safelight)]"
-      >
-        back to the space
-      </Link>
+      <SiteFooter current="/proof" />
     </main>
   );
 }

@@ -1,6 +1,5 @@
-import Link from "next/link";
-
 import { Centerpiece } from "@/components/centerpiece";
+import { SiteFooter } from "@/components/site-footer";
 import { Space } from "@/components/space";
 import { getSpace } from "@/lib/builders";
 
@@ -38,21 +37,7 @@ export default async function Home() {
         <Space builders={builders} />
       </div>
 
-      {/* The signature grew a job (2026-07-31): "developing" is now the door
-          to the stream, so the broad engine is discoverable from the home
-          page. /proof stays deliberately unlinked — evidence for a reviewer
-          who goes looking, not decoration. */}
-      <p className="mt-8 font-mono text-sm tracking-widest">
-        <span aria-hidden="true" className="opacity-[var(--latent)]">
-          latent ·{" "}
-        </span>
-        <Link
-          href="/developing"
-          className="opacity-55 underline decoration-[color-mix(in_srgb,var(--ink)_35%,transparent)] underline-offset-4 transition-opacity hover:opacity-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--safelight)]"
-        >
-          developing
-        </Link>
-      </p>
+      <SiteFooter current="/" />
     </main>
   );
 }
