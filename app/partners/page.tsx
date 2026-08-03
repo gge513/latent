@@ -50,8 +50,7 @@ export default async function Partners() {
         <h1 className="text-3xl leading-tight">For partners</h1>
         <p className="mt-3 leading-relaxed opacity-70">
           Thirty-one builders spent the summer shipping real products. This is
-          how you find the ones closest to what you are trying to do, what it
-          costs, and who you can actually reach.
+          how you meet the ones closest to what you are trying to do.
         </p>
       </header>
 
@@ -62,11 +61,11 @@ export default async function Partners() {
         <p className="leading-relaxed">
           Say one sentence about what your team is trying to build. You get the
           two or three people whose public work sits closest to it, each with a
-          written reason grounded in what they have actually shipped. Then you
-          pick one, and the site hands you a finished message to send.
+          written reason grounded in what they have shipped. You pick one, and
+          the site hands you a finished message to send.
         </p>
         <p className="leading-relaxed opacity-70">
-          There is no account, no form in the way, and no ranking anywhere.
+          There is no account, nothing to fill in first, and no ranking.
           Distance between two people means only that they work on similar
           things. Nobody is above anybody.
         </p>
@@ -127,11 +126,10 @@ export default async function Partners() {
             <span className="font-mono">
               {counts.developed} of {counts.total}
             </span>{" "}
-            builders {counts.developed === 1 ? "has" : "have"} developed a card,
-            which means they have written their own line and chosen how to be
-            contacted. The rest are latent: their
-            page shows public facts about their work and a line marked as
-            machine-written, and there is no contact channel on it.
+            builders {counts.developed === 1 ? "has" : "have"} developed a card:
+            written their own line, chosen how to be reached. The rest are
+            latent. Their page shows public facts and a line marked as
+            machine-written, and carries no contact channel.
           </p>
         ) : (
           <p className="leading-relaxed">
@@ -139,11 +137,9 @@ export default async function Partners() {
           </p>
         )}
         <p className="leading-relaxed opacity-70">
-          That is a design decision, not a gap being fixed. Being reachable is
-          something a person opts into here, and nobody is listed as available
-          on their behalf. If the person you want is latent, the honest answer
-          is that this site will not hand you their inbox. It will show you
-          their work, and you can reach them the way anyone else would.
+          If the person you want is latent, this site will not hand you their
+          inbox. It will show you their work, and you can reach them the way
+          anyone else would.
         </p>
       </section>
 
@@ -152,14 +148,13 @@ export default async function Partners() {
           what it costs
         </h2>
         <p className="leading-relaxed">
-          Nothing, and this site takes no fee of any kind. It is not a staffing
-          agency and it holds no agreement with anyone on it.
+          Nothing. This site takes no fee, is not a staffing agency, and holds
+          no agreement with anyone on it.
         </p>
         <p className="leading-relaxed opacity-70">
-          The summer program these builders came through runs its own hiring
-          arrangement with employers, including its own fee. That is the
-          program&rsquo;s to state and not this site&rsquo;s, so you will not
-          find terms invented here. Ask the program directly.
+          The summer program these builders came through has its own
+          arrangement with employers, including its own fee. Those terms are
+          the program&rsquo;s to state, not ours. Ask them directly.
         </p>
       </section>
 
@@ -168,9 +163,8 @@ export default async function Partners() {
           ask for an introduction
         </h2>
         <p className="leading-relaxed opacity-70">
-          This writes the message for you. It does not send it, and it does not
-          keep it. You will get finished text to copy or open in your own mail,
-          and nothing reaches anyone until you send it yourself.
+          This writes the message for you. You send it yourself, from your own
+          mail, and nothing here reaches anyone until you do.
         </p>
         {/* The address is an environment value, never a literal. A personal
             address hardcoded as a fallback ships in the repo and becomes the

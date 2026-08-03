@@ -122,9 +122,9 @@ export function IntroRequest({ to }: { to: string | null }) {
           </span>
         </div>
         <p className="font-mono text-xs leading-relaxed opacity-55">
-          Nothing here was sent and nothing was stored. The message is yours to
+          Nothing was sent and nothing was stored. The message is yours to
           send{to ? "" : ", to whichever address you already have"}. This site
-          does not deliver it for you, and it will not tell you that it did.
+          does not deliver it, and will not tell you that it did.
         </p>
       </div>
     );
