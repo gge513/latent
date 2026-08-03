@@ -57,6 +57,21 @@ export default async function Partners() {
           Thirty-one builders spent the summer shipping real products. This is
           how you meet the ones closest to what you are trying to do.
         </p>
+        {/* Self-selection, the same job the sentence frame does on the home
+            page: lib/frame-mode.ts reshapes the connective around who the
+            visitor says they are, "looking to build" or "looking for someone
+            to build", and §4.5 gives that rung the job of "is it for me".
+            This page was the only surface not doing it, addressing an
+            ambiguous "you" while the instrument adapted.
+
+            Building is named first because it is the product's default and,
+            in the frame's own words, the wider door. Leading with hiring would
+            contradict that default at the moment a reader decides whether the
+            page is for them. */}
+        <p className="mt-4 leading-relaxed opacity-70">
+          Some arrive here building something and needing someone alongside
+          them. Some arrive hiring. This works for both.
+        </p>
       </header>
 
       <section className="flex flex-col gap-3">
