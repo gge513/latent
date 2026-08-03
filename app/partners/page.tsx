@@ -10,6 +10,17 @@ import { getProofCounts } from "@/lib/builders";
 /**
  * /partners — the mandatory partner surface (`requirements.md`).
  *
+ * **Open, flagged 2026-08-03, not a defect yet.** The h1 says "For partners",
+ * which names one of the two readers this page serves. Someone arriving to
+ * build something and needing a person alongside them does not call themselves
+ * a partner, so the largest text picks a side that the line beneath it
+ * un-picks. George ruled it acceptable for now on the reading that everyone
+ * here can be looked at as a partner. Worth revisiting: the route must stay
+ * /partners because requirements.md names it, but the visible heading is free,
+ * exactly as it was on /cohort. Note also that "partners" is closer to an
+ * internal noun (§4.3) than it appears, since it is the program's word for
+ * employers rather than a word either reader uses about themselves.
+ *
  * Two rules this page keeps, and both cost it something.
  *
  * It states no commercial terms of its own. The referral fee belongs to the
