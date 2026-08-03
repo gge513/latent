@@ -39,8 +39,15 @@ export function SentenceFrame({
   const inputClass =
     "inline-block border-0 border-b bg-transparent text-center font-[inherit] text-[inherit] italic outline-none transition-opacity duration-500 border-b-[color-mix(in_srgb,var(--ink)_40%,transparent)] focus-visible:border-b-[var(--safelight)]";
 
+  // Not a heading. This is the instrument: a sentence the visitor completes,
+  // wrapping two form controls. It was an <h1>, which made the page announce
+  // two top-level headings and gave assistive tech "I am a looking to build"
+  // as one of them, a fill-in-the-blank fragment that is nonsense read aloud.
+  // A heading may not contain form controls either. The orientation line in
+  // centerpiece.tsx keeps the page's single h1; every visual class here is
+  // unchanged, so nothing moves.
   return (
-    <h1 className="max-w-3xl text-center text-4xl leading-relaxed sm:text-5xl sm:leading-relaxed">
+    <p className="max-w-3xl text-center text-4xl leading-relaxed sm:text-5xl sm:leading-relaxed">
       I am a{" "}
       <input
         value={blank1}
@@ -65,6 +72,6 @@ export function SentenceFrame({
         size={Math.min(28, Math.max(8, blank2.length))}
         className={`${inputClass} ${blank2 ? "opacity-100" : "opacity-[var(--latent)] focus:opacity-100"}`}
       />
-    </h1>
+    </p>
   );
 }

@@ -37,6 +37,11 @@ export default async function Proof() {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center gap-10 px-6 text-center">
+      {/* The page had no h1 at all. The count line below is the subject but it
+          is a statistic, not a heading, and the design is deliberately one
+          line, so the heading is present for assistive tech and absent to the
+          eye. Nothing moves. */}
+      <h1 className="sr-only">Proof</h1>
       <p className="develop-once max-w-3xl text-3xl leading-relaxed sm:text-4xl">
         {counts
           ? `${counts.developed} of ${counts.total} developed · ${counts.sent} sent`
