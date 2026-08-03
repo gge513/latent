@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 
 import { SiteFooter } from "@/components/site-footer";
 
+import Link from "next/link";
+
 import { IntroRequest } from "@/components/intro-request";
 import { getProofCounts } from "@/lib/builders";
 
@@ -21,6 +23,9 @@ import { getProofCounts } from "@/lib/builders";
  * moment someone claims, which is exactly the failure that put "thirty" in
  * copy while the space held 31. A number that is read cannot drift.
  */
+
+const LINK =
+  "underline decoration-[color-mix(in_srgb,var(--ink)_35%,transparent)] underline-offset-4 opacity-100 transition-opacity hover:text-[var(--safelight)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--safelight)]";
 
 export const revalidate = 60;
 
@@ -140,6 +145,21 @@ export default async function Partners() {
           If the person you want is latent, this site will not hand you their
           inbox. It will show you their work, and you can reach them the way
           anyone else would.
+        </p>
+        {/* The distinction was described three times on this page and shown
+            nowhere. A page whose whole argument is "look at the work" cannot
+            ask a reader to take the difference on trust. Both examples are the
+            ones the shipped README already uses. */}
+        <p className="font-mono text-xs leading-relaxed opacity-55">
+          See both:{" "}
+          <Link href="/b/gge513" className={LINK}>
+            a developed card
+          </Link>{" "}
+          and{" "}
+          <Link href="/b/priyanshshahh" className={LINK}>
+            a latent one
+          </Link>
+          .
         </p>
       </section>
 
