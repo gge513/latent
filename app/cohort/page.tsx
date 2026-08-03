@@ -1,0 +1,98 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+
+import { getCohortStatus } from "@/lib/cohort";
+
+/**
+ * /cohort — read-only cohort project status (`requirements.md`, PM integration).
+ *
+ * Its own page rather than a panel on /proof, because /proof holds a lock:
+ * "one line, developing, on its own page", and a status table on it would be
+ * the dashboard that aesthetic step 1 killed.
+ *
+ * The rule this page keeps: it shows what it read, or it says it could not
+ * read. There is no third state where a remembered number appears under a
+ * fresh timestamp.
+ */
+
+export const revalidate = 3600;
+
+export const metadata: Metadata = {
+  title: "Cohort status · Latent",
+  description:
+    "Read-only cohort project status, counted from merged submission pull requests.",
+};
+
+function whenText(iso: string | null): string {
+  if (!iso) return "no merges yet";
+  return `last merge ${iso.slice(0, 10)}`;
+}
+
+export default async function Cohort() {
+  const status = await getCohortStatus();
+
+  return (
+    <main className="mx-auto flex min-h-screen w-full max-w-2xl flex-col gap-10 px-6 py-24">
+      <header>
+        <h1 className="text-3xl leading-tight">Cohort status</h1>
+        <p className="mt-3 leading-relaxed opacity-70">
+          What has actually shipped across the three phase-1 projects, counted
+          from merged submission pull requests on the cohort repository. Nothing
+          on this page is typed by hand.
+        </p>
+      </header>
+
+      <section className="flex flex-col gap-5">
+        {status.projects.map((p) => (
+          <div
+            key={p.key}
+            className="border-l border-[color-mix(in_srgb,var(--ink)_25%,transparent)] pl-5"
+          >
+            <p className="text-lg leading-relaxed">{p.title}</p>
+            {p.merged === null ? (
+              <p className="mt-1 font-mono text-xs tracking-wide opacity-55">
+                not checked · the read did not complete
+              </p>
+            ) : (
+              <p className="mt-1 font-mono text-xs tracking-wide opacity-55">
+                {p.merged} merged {p.merged === 1 ? "submission" : "submissions"}
+                {" · "}
+                {whenText(p.latestAt)}
+              </p>
+            )}
+          </div>
+        ))}
+      </section>
+
+      {!status.complete && (
+        <p className="font-mono text-xs leading-relaxed opacity-55">
+          At least one branch could not be read just now, and those rows say
+          &ldquo;not checked&rdquo; rather than showing a number. A count we did
+          not just verify is not a count.
+        </p>
+      )}
+
+      <section className="flex flex-col gap-3">
+        <p className="font-mono text-xs leading-relaxed opacity-55">
+          Source: <span className="opacity-100">{status.source}</span>, read
+          directly from the GitHub API and refreshed hourly.
+        </p>
+        <p className="font-mono text-xs leading-relaxed opacity-55">
+          The cohort&rsquo;s project management platform is a private workspace
+          with no public read surface, so its own board cannot be mirrored here
+          without credentials. This reads the system of record instead: the
+          repository the submissions actually merge into.
+        </p>
+      </section>
+
+      <footer>
+        <Link
+          href="/"
+          className="font-mono text-xs tracking-widest opacity-60 underline decoration-[color-mix(in_srgb,var(--ink)_30%,transparent)] underline-offset-4 hover:opacity-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--safelight)]"
+        >
+          back to the space
+        </Link>
+      </footer>
+    </main>
+  );
+}

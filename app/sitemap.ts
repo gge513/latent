@@ -20,6 +20,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: siteUrl, changeFrequency: "daily" },
     { url: `${siteUrl}/developing`, changeFrequency: "daily" },
     { url: `${siteUrl}/proof`, changeFrequency: "daily" },
+    { url: `${siteUrl}/cohort`, changeFrequency: "daily" },
   ];
 
   try {

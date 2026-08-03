@@ -93,12 +93,23 @@ export default async function Developing() {
         </ol>
       )}
 
-      <Link
-        href="/"
-        className="font-mono text-xs tracking-widest opacity-55 underline decoration-[color-mix(in_srgb,var(--ink)_35%,transparent)] underline-offset-4 transition-opacity hover:opacity-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--safelight)]"
-      >
-        back to the space
-      </Link>
+      <p className="flex gap-5 font-mono text-xs tracking-widest">
+        <Link
+          href="/"
+          className="opacity-55 underline decoration-[color-mix(in_srgb,var(--ink)_35%,transparent)] underline-offset-4 transition-opacity hover:opacity-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--safelight)]"
+        >
+          back to the space
+        </Link>
+        {/* The stream is what the engine writes; cohort status is what the
+            cohort shipped. Both are the site reading a public record rather
+            than a person typing, so this is where the link belongs. */}
+        <Link
+          href="/cohort"
+          className="opacity-55 underline decoration-[color-mix(in_srgb,var(--ink)_35%,transparent)] underline-offset-4 transition-opacity hover:opacity-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--safelight)]"
+        >
+          cohort status
+        </Link>
+      </p>
     </main>
   );
 }
