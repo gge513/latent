@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import { SiteFooter } from "@/components/site-footer";
 
+import { IntroRequest } from "@/components/intro-request";
 import { getProofCounts } from "@/lib/builders";
 
 /**
@@ -114,6 +115,23 @@ export default async function Partners() {
           program&rsquo;s to state and not this site&rsquo;s, so you will not
           find terms invented here. Ask the program directly.
         </p>
+      </section>
+
+      <section className="flex flex-col gap-4">
+        <h2 className="font-mono text-xs tracking-widest opacity-55">
+          ask for an introduction
+        </h2>
+        <p className="leading-relaxed opacity-70">
+          This writes the message for you. It does not send it, and it does not
+          keep it. You will get finished text to copy or open in your own mail,
+          and nothing reaches anyone until you send it yourself.
+        </p>
+        {/* The address is an environment value, never a literal. A personal
+            address hardcoded as a fallback ships in the repo and becomes the
+            live value the moment the variable is unset, which is a mistake I
+            reviewed on a peer's build this week. Unset here means the form
+            still composes and simply offers no mail door. */}
+        <IntroRequest to={process.env.INTRO_EMAIL ?? null} />
       </section>
 
       <section className="flex flex-col gap-3">
